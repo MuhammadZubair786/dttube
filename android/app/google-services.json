@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "321265351895",
+    "project_id": "dttube-e24b3",
+    "storage_bucket": "dttube-e24b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321265351895:android:aea67afeb2db8d13960492",
+        "android_client_info": {
+          "package_name": "com.youthpagenetwork.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvLzvULIYbp0xXUqs6JWO_S7ahgcNgX9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
