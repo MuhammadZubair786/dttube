@@ -82,52 +82,52 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       child: MyImage(
                           width: 20, height: 20, imagePath: "ic_search.png")),
                   const SizedBox(width: 15),
-                  InkWell(
-                      onTap: () {
-                        AdHelper.showFullscreenAd(
-                            context, Constant.interstialAdType, () {
-                          if (Constant.userID == null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return const Login();
-                                },
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return const Profile(
-                                    isProfile: true,
-                                    channelUserid: "",
-                                    channelid: "",
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        });
-                      },
-                      child: Constant.userID == null
-                          ? MyImage(
-                              width: 30, height: 30, imagePath: "youth_page.jfif")
-                          : Container(
-                              padding: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: white, width: 1),
-                                  shape: BoxShape.circle),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: MyNetworkImage(
-                                    fit: BoxFit.cover,
-                                    width: 30,
-                                    height: 30,
-                                    imagePath: userImage ?? ""),
-                              ),
-                            )),
+                  // InkWell(
+                  //     onTap: () {
+                  //       AdHelper.showFullscreenAd(
+                  //           context, Constant.interstialAdType, () {
+                  //         if (Constant.userID == null) {
+                  //           Navigator.push(
+                  //             context,
+                  //             MaterialPageRoute(
+                  //               builder: (context) {
+                  //                 return const Login();
+                  //               },
+                  //             ),
+                  //           );
+                  //         } else {
+                  //           Navigator.push(
+                  //             context,
+                  //             MaterialPageRoute(
+                  //               builder: (context) {
+                  //                 return const Profile(
+                  //                   isProfile: true,
+                  //                   channelUserid: "",
+                  //                   channelid: "",
+                  //                 );
+                  //               },
+                  //             ),
+                  //           );
+                  //         }
+                  //       });
+                  //     },
+                  //     child: Constant.userID == null
+                  //         ? MyImage(
+                  //             width: 30, height: 30, imagePath: "youth_page.jfif")
+                  //         : Container(
+                  //             padding: const EdgeInsets.all(3),
+                  //             decoration: BoxDecoration(
+                  //                 border: Border.all(color: white, width: 1),
+                  //                 shape: BoxShape.circle),
+                  //             child: ClipRRect(
+                  //               borderRadius: BorderRadius.circular(50),
+                  //               child: MyNetworkImage(
+                  //                   fit: BoxFit.cover,
+                  //                   width: 30,
+                  //                   height: 30,
+                  //                   imagePath: userImage ?? ""),
+                  //             ),
+                  //           )),
                 ],
               ),
             ],

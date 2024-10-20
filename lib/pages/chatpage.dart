@@ -13,7 +13,7 @@ class ChatListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: colorAccent,
+        backgroundColor: Colors.red,
         title: Text('Chats',style: TextStyle(color: Colors.white)),
       ),
       body: ListView.builder(

@@ -206,68 +206,71 @@ class BottombarState extends State<Bottombar> {
                 label: "Reels",
                 backgroundColor: colorPrimary,
                 activeIcon: RadiantGradientMask(
-                  child: MyImage(
-                    imagePath: "ic_short.png",
-                    width: Dimens.iconbottomNav,
-                    height: Dimens.iconbottomNav,
-                  ),
+                  child:
+                  Icon(Icons.video_collection_outlined,color:Colors.red,
+                  size:  40,
+                  )
+                
                 ),
                 icon: Align(
                   alignment: Alignment.center,
-                  child: MyImage(
-                    imagePath: "ic_short.png",
-                    width: Dimens.iconbottomNav,
-                    height: Dimens.iconbottomNav,
-                    color: gray,
-                  ),
+                  child:Icon(Icons.video_collection_outlined,color:Colors.grey)
+                  //  MyImage(
+                  //   imagePath: "ic_short.png",
+                  //   width: Dimens.iconbottomNav,
+                  //   height: Dimens.iconbottomNav,
+                  //   color: gray,
+                  // ),
                 ),
               ),
               BottomNavigationBarItem(
                 backgroundColor: colorPrimary,
                 label: "Update",
                 activeIcon: RadiantGradientMask(
-                  child: MyImage(
-                    imagePath: "ic_home.png",
-                    width: Dimens.iconbottomNav,
-                    height: Dimens.iconbottomNav,
-                  ),
+                  child: 
+                 Icon(Icons.update,color:Colors.red,
+                  size:  40,
+                  )
+                  //   imagePath: "ic_home.png",
+                  //   width: Dimens.iconbottomNav,
+                  //   height: Dimens.iconbottomNav,
+                  // ),
                 ),
                 icon: Align(
                   alignment: Alignment.center,
-                  child: MyImage(
-                    imagePath: "ic_home.png",
-                    width: Dimens.iconbottomNav,
-                    height: Dimens.iconbottomNav,
-                    color: gray,
-                  ),
+                  child:Icon(Icons.update,color:Colors.grey)
                 ),
               ),
               
               BottomNavigationBarItem(
-                label: "",
+                label: "Post",
                 backgroundColor: colorPrimary,
                 activeIcon: Container(
                   padding: const EdgeInsets.all(0),
-                  child: MyImage(
-                    imagePath: "ic_post.png",
-                    width: Dimens.centerIconbottomNav,
-                    height: Dimens.centerIconbottomNav,
-                  ),
+                  child: Icon(Icons.post_add,color: Colors.red,size:40,)
+                  
+                  // MyImage(
+                  //   imagePath: "ic_post.png",
+                  //   width: Dimens.centerIconbottomNav,
+                  //   height: Dimens.centerIconbottomNav,
+                  // ),
                 ),
                 icon: Container(
                   padding: const EdgeInsets.all(0),
-                  child: MyImage(
-                    width: Dimens.centerIconbottomNav,
-                    height: Dimens.centerIconbottomNav,
-                    imagePath: "ic_post.png",
-                  ),
+                  child: Icon(Icons.post_add)
+                  // MyImage(
+                  //   width: Dimens.centerIconbottomNav,
+                  //   height: Dimens.centerIconbottomNav,
+                  //   imagePath: "ic_post.png",
+                  // ),
                 ),
               ),
               BottomNavigationBarItem(
                 backgroundColor: colorPrimary,
                 label: "Chat",
                 activeIcon: RadiantGradientMask(
-                  child:Icon(Icons.chat)
+                  child:Icon(Icons.chat,color:Colors.red,
+                  size:  40,)
                 ),
                 icon: Align(
                   alignment: Alignment.center,
@@ -278,20 +281,25 @@ class BottombarState extends State<Bottombar> {
                 backgroundColor: colorPrimary,
                 label: "Setting",
                 activeIcon: RadiantGradientMask(
-                  child: MyImage(
-                    imagePath: "ic_setting.png",
-                    width: Dimens.iconbottomNav,
-                    height: Dimens.iconbottomNav,
-                  ),
+                  child:
+                  Icon(Icons.settings,color:Colors.red,
+                  size:  40,)
+                  //  MyImage(
+                  //   imagePath: "ic_setting.png",
+                  //   width: Dimens.iconbottomNav,
+                  //   height: Dimens.iconbottomNav,
+                  // ),
                 ),
                 icon: Align(
                   alignment: Alignment.center,
-                  child: MyImage(
-                    width: Dimens.iconbottomNav,
-                    height: Dimens.iconbottomNav,
-                    color: gray,
-                    imagePath: "ic_setting.png",
-                  ),
+                  child:
+                   Icon(Icons.settings,)
+                  //  MyImage(
+                  //   width: Dimens.iconbottomNav,
+                  //   height: Dimens.iconbottomNav,
+                  //   color: gray,
+                  //   imagePath: "ic_setting.png",
+                  // ),
                 ),
               ),
             ],

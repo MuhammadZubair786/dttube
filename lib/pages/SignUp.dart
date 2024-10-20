@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dttube/pages/SignUp.dart';
+import 'package:dttube/pages/login.dart';
 import 'package:dttube/pages/otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,14 +24,14 @@ import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:crypto/crypto.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
   late GeneralProvider generalProvider;
   SharedPre sharedPre = SharedPre();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -40,13 +40,12 @@ class _LoginState extends State<Login> {
   File? mProfileImg;
   bool isagreeCondition = false;
   String? strDeviceType, strDeviceToken;
-  final PasswordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+ final PasswordController = TextEditingController();
   final EmailController = TextEditingController();
 
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    var loading=false;
-
+  var loading=false;
 
   @override
   void initState() {
@@ -55,103 +54,14 @@ class _LoginState extends State<Login> {
     _getDeviceToken();
   }
 
-  _getDeviceToken() async {
-    try {
-      if (Platform.isAndroid) {
-        strDeviceType = "1";
-        strDeviceToken = await FirebaseMessaging.instance.getToken();
-      } else {
-        strDeviceType = "2";
-        strDeviceToken = OneSignal.User.pushSubscription.id.toString();
-      }
-    } catch (e) {
-      debugPrint("_getDeviceToken Exception ===> $e");
-    }
-    debugPrint("===>strDeviceToken $strDeviceToken");
-    debugPrint("===>strDeviceType $strDeviceType");
-  }
-
-   Future<void> login() async {
-    String email = EmailController.text.trim();
-    String password = PasswordController.text.trim();
-    String phoneNumber = numberController.text.trim();
-      //  Utils.showProgress(context);
-
-    try {
-      // Sign in with email and password
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Get the user's document from Firestore
-      DocumentSnapshot userDoc = await _firestore
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .get();
-
-      if (userDoc.exists) {
-        // Verify the phone number matches the one stored in Firestore
-        String storedPhoneNumber = userDoc.get('phoneNumber');
-        if (storedPhoneNumber == phoneNumber) {
-          showMessage('Login successful!');
-
-              _login(
-          phoneNumber, email,userCredential.user?.uid.toString() ?? "");
-          // Utils().hideProgress(context);
-        } else {
-          showMessage('The phone number does not match.');
-           setState(() {
-                                loading=false;
-                              });
-        
-        }
-      } else {
-        showMessage('User data not found.');
-           setState(() {
-                                loading=false;
-                              });
-
-      }
-    } catch (e) {
-      showMessage('Error: ${e.toString()}');
-           setState(() {
-                                loading=false;
-                              });
-
-    }
-  }
-
-  void showMessage(String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        backgroundColor: colorAccent,
-        content: MyText(
-          text: message,
-          multilanguage: false,
-          fontsize: 14,
-          maxline: 1,
-          overflow: TextOverflow.ellipsis,
-          fontstyle: FontStyle.normal,
-          fontwaight: FontWeight.w500,
-          color: white,
-          textalign: TextAlign.center,
-        ),
-      ));
-
-  }
-
-     _login(String mobile,String email, String firebaseId) async {
+   _login(String mobile,String email, String firebaseId) async {
     debugPrint("click on Submit mobile =====> $mobile");
     debugPrint("click on Submit firebaseId => $firebaseId");
     final generalProvider =
         Provider.of<GeneralProvider>(context, listen: false);
     // Utils.showProgress(context);
     await generalProvider.login(
-        "1",email, mobile, strDeviceType ?? "", strDeviceToken ?? "");
+        "1", email, mobile, strDeviceType ?? "", strDeviceToken ?? "");
     debugPrint('test');
     if (!generalProvider.loading) {
       if (!mounted) return;
@@ -215,6 +125,7 @@ class _LoginState extends State<Login> {
 
         debugPrint('Constant userID ==>> ${Constant.userID}');
         debugPrint('Constant ChannelId ==>> ${Constant.channelID}');
+
           setState(() {
                                 loading=false;
                               });
@@ -228,12 +139,113 @@ class _LoginState extends State<Login> {
       } else {
         if (!mounted) return;
         log('error');
-        setState(() {
+         setState(() {
                                 loading=false;
                               });
         Utils.showSnackbar(context, "Error");
       }
     }
+  }
+
+
+  _getDeviceToken() async {
+    try {
+      if (Platform.isAndroid) {
+        strDeviceType = "1";
+        strDeviceToken = await FirebaseMessaging.instance.getToken();
+      } else {
+        strDeviceType = "2";
+        strDeviceToken = OneSignal.User.pushSubscription.id.toString();
+      }
+    } catch (e) {
+      debugPrint("_getDeviceToken Exception ===> $e");
+    }
+    debugPrint("===>strDeviceToken $strDeviceToken");
+    debugPrint("===>strDeviceType $strDeviceType");
+  }
+
+  Future<void> signUp() async {
+    String email = EmailController.text.trim();
+    String password = PasswordController.text.trim();
+    String phoneNumber = numberController.text.trim();
+
+    try {
+      // Check if the email already exists
+      var emailSnapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      // Check if the phone number already exists
+      var phoneSnapshot = await _firestore
+          .collection('users')
+          .where('phoneNumber', isEqualTo: phoneNumber)
+          .get();
+
+      if (emailSnapshot.docs.isNotEmpty) {
+        showMessage('The email is already registered.');
+          setState(() {
+                                loading=false;
+                              });
+        return;
+      }
+
+      if (phoneSnapshot.docs.isNotEmpty) {
+        showMessage('The phone number is already registered.');
+            setState(() {
+                                loading=false;
+                              });
+        return;
+      }
+
+      // Create a new user
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Add user data to Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'uid': userCredential.user!.uid,
+        'createdAt': Timestamp.now(),
+      });
+
+      showMessage('Sign up successful!');
+         _login(
+          phoneNumber, email,userCredential.user?.uid.toString() ?? "");
+        
+    } catch (e) {
+
+      showMessage('Error: ${e.toString()}');
+          setState(() {
+                                loading=false;
+                              });
+    }
+  }
+
+  void showMessage(String message) {
+   
+
+     ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        backgroundColor: colorAccent,
+        content: MyText(
+          text: message,
+          multilanguage: false,
+          fontsize: 14,
+          maxline: 1,
+          overflow: TextOverflow.ellipsis,
+          fontstyle: FontStyle.normal,
+          fontwaight: FontWeight.w500,
+          color: white,
+          textalign: TextAlign.center,
+        ),
+      ));
   }
 
   @override
@@ -298,115 +310,93 @@ class _LoginState extends State<Login> {
                       children: [
                         MyText(
                             color: white,
-                            text: "hello",
+                            text: "Welcome",
                             textalign: TextAlign.center,
                             fontsize: 20,
-                            multilanguage: true,
+                            multilanguage: false,
                             inter: false,
                             maxline: 1,
                             fontwaight: FontWeight.w500,
                             overflow: TextOverflow.ellipsis,
                             fontstyle: FontStyle.normal),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                         MyText(
                             color: white,
-                            text: "loginyouraccount",
+                            text: "Create a Account",
                             textalign: TextAlign.center,
                             fontsize: 16,
-                            multilanguage: true,
+                            multilanguage: false,
                             inter: false,
                             maxline: 1,
                             fontwaight: FontWeight.w400,
                             overflow: TextOverflow.ellipsis,
                             fontstyle: FontStyle.normal),
-                       
-                              SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.07,
-                          child: TextFormField(
-                            controller: EmailController,
-                            autovalidateMode: AutovalidateMode.disabled,
-                            style: Utils.googleFontStyle(
-                              4,
-                              16,
-                              FontStyle.normal,
-                              white,
-                              FontWeight.w500,
-                            ),
-                            textAlignVertical: TextAlignVertical.center,
-                              keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: colorPrimaryDark,
-                              border: InputBorder.none,
-                              hintStyle: Utils.googleFontStyle(
-                                4,
-                                14,
-                                FontStyle.normal,
-                                white,
-                                FontWeight.w500,
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                      SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.07,
+                                child: TextFormField(
+                  controller: EmailController,
+                  autovalidateMode: AutovalidateMode.disabled,
+                  style: Utils.googleFontStyle(
+                    4, 16, FontStyle.normal, white, FontWeight.w500,
+                  ),
+                  textAlignVertical: TextAlignVertical.center,
+                                 keyboardType: TextInputType.text,
+
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: colorPrimaryDark,
+                    border: InputBorder.none,
+                    hintStyle: Utils.googleFontStyle(
+                      4, 14, FontStyle.normal, white, FontWeight.w500,
+                    ),
+                    hintText: "Email Address",
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: white, width: 1),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: white, width: 1),
+                    ),
+                  ),
+                  
+                                ),
                               ),
-                              hintText: "Email Address",
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: white, width: 1),
+                                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                                  SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.07,
+                                child: TextFormField(
+                  controller: PasswordController,
+                  autovalidateMode: AutovalidateMode.disabled,
+                  style: Utils.googleFontStyle(
+                    4, 16, FontStyle.normal, white, FontWeight.w500,
+                  ),
+                  textAlignVertical: TextAlignVertical.center,
+                 keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: colorPrimaryDark,
+                    border: InputBorder.none,
+                    hintStyle: Utils.googleFontStyle(
+                      4, 14, FontStyle.normal, white, FontWeight.w500,
+                    ),
+                    hintText: "Password ",
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: white, width: 1),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: white, width: 1),
+                    ),
+                  ),
+                  
+                                ),
                               ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: white, width: 1),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.07,
-                          child: TextFormField(
-                            controller: PasswordController,
-                            autovalidateMode: AutovalidateMode.disabled,
-                            style: Utils.googleFontStyle(
-                              4,
-                              16,
-                              FontStyle.normal,
-                              white,
-                              FontWeight.w500,
-                            ),
-                            textAlignVertical: TextAlignVertical.center,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: colorPrimaryDark,
-                              border: InputBorder.none,
-                              hintStyle: Utils.googleFontStyle(
-                                4,
-                                14,
-                                FontStyle.normal,
-                                white,
-                                FontWeight.w500,
-                              ),
-                              hintText: "Password ",
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: white, width: 1),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: white, width: 1),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
+                                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                         /* Send OTP Continue Button Text  */
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.07,
@@ -415,30 +405,28 @@ class _LoginState extends State<Login> {
                             textAlignVertical: TextAlignVertical.center,
                             autovalidateMode: AutovalidateMode.disabled,
                             controller: numberController,
-                            style: Utils.googleFontStyle(4, 16,
-                                FontStyle.normal, white, FontWeight.w500),
+                            style: Utils.googleFontStyle(
+                                4, 16, FontStyle.normal, white, FontWeight.w500),
                             showCountryFlag: false,
                             showDropdownIcon: false,
                             initialCountryCode: "IN",
-                            dropdownTextStyle: Utils.googleFontStyle(4, 16,
-                                FontStyle.normal, white, FontWeight.w500),
+                            dropdownTextStyle: Utils.googleFontStyle(
+                                4, 16, FontStyle.normal, white, FontWeight.w500),
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: colorPrimaryDark,
                               border: InputBorder.none,
-                              hintStyle: Utils.googleFontStyle(4, 14,
-                                  FontStyle.normal, white, FontWeight.w500),
+                              hintStyle: Utils.googleFontStyle(
+                                  4, 14, FontStyle.normal, white, FontWeight.w500),
                               hintText: "Mobile Number",
                               enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                                 borderSide: BorderSide(color: white, width: 1),
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                                 borderSide: BorderSide(color: white, width: 1),
                               ),
                             ),
@@ -452,10 +440,10 @@ class _LoginState extends State<Login> {
                             },
                           ),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                         /* Send OTP Continue Button Text  */
-                         loading==true?
+
+                        loading==true?
                         Center(
       child: SizedBox(
         width: 40,
@@ -478,26 +466,32 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
-    ): InkWell(
+    ):
+                        InkWell(
                           onTap: () {
-                              if (EmailController.text.toString().isEmpty) {
+                             if (EmailController.text.toString().isEmpty) {
                              showMessage('The Email is not Empty.');
                             }
                             else if (PasswordController.text.toString().isEmpty) {
                                                         showMessage('The Password is not Empty.');
 
                             }
-                            if (numberController.text.toString().isEmpty) {
+                           else if (numberController.text.toString().isEmpty) {
                               Utils.showSnackbar(
                                   context, "pleaseenteryourmobilenumber");
                             } else if (isagreeCondition != true) {
                               Utils.showSnackbar(
                                   context, "pleaseaccepttermsandcondition");
                             } else {
-                              setState((){
+                              // Navigator.of(context).push(
+                              //   MaterialPageRoute(
+                              //     builder: (context) => Otp(number: mobilenumber),
+                              //   ),
+                              // );
+                              setState(() {
                                 loading=true;
                               });
-                             login();
+                              signUp();
                             }
                           },
                           child: Container(
@@ -521,8 +515,7 @@ class _LoginState extends State<Login> {
                                 fontstyle: FontStyle.normal),
                           ),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                         /* Accept Terms & Consition */
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -599,8 +592,7 @@ class _LoginState extends State<Login> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                         /* OR Text  */
                         Align(
                           alignment: Alignment.center,
@@ -616,8 +608,7 @@ class _LoginState extends State<Login> {
                               overflow: TextOverflow.ellipsis,
                               fontstyle: FontStyle.normal),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -643,8 +634,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.05),
+                                width: MediaQuery.of(context).size.width * 0.05),
                             /* Apple Signin Button */
                             Platform.isIOS
                                 ? InkWell(
@@ -669,22 +659,22 @@ class _LoginState extends State<Login> {
                                 : const SizedBox.shrink(),
                           ],
                         ),
-                        SizedBox(height:20),
+                         SizedBox(height:20),
                         Align(
                           alignment: Alignment.center,
                           child: InkWell(
                             onTap: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Signup()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 MyText(
                                     color: Colors.red,
-                                    text: "donthaveanccount",
+                                    text: "Already have an Account?",
                                     textalign: TextAlign.left,
                                     fontsize: 12,
-                                    multilanguage: true,
+                                    multilanguage: false,
                                     inter: false,
                                     maxline: 1,
                                     fontwaight: FontWeight.w400,
@@ -695,10 +685,10 @@ class _LoginState extends State<Login> {
                                         MediaQuery.of(context).size.width * 0.01),
                                 MyText(
                                     color: white,
-                                    text: "signup",
+                                    text: "Login",
                                     textalign: TextAlign.left,
                                     fontsize: 12,
-                                    multilanguage: true,
+                                    multilanguage: false,
                                     inter: false,
                                     maxline: 1,
                                     fontwaight: FontWeight.w400,

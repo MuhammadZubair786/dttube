@@ -359,7 +359,7 @@ class ShortState extends State<Short> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                      color:Colors.red,
+                      color:Color(0xffD400FF),
                       border: Border.all(width: 1,color:Colors.transparent),
                       borderRadius: BorderRadius.circular(10)
                       ),
@@ -765,27 +765,27 @@ class ShortState extends State<Short> {
                         const SizedBox(height: 20),
                         Stack(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: MyNetworkImage(
-                                width: 50,
-                                height: 50,
-                                imagePath: shortProvider
-                                        .shortVideoList?[index].portraitImg
-                                        .toString() ??
-                                    "",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: MyImage(
-                                    width: 30,
-                                    height: 30,
-                                    imagePath: "music.gif"),
-                              ),
-                            ),
+                            // ClipRRect(
+                            //   borderRadius: BorderRadius.circular(5),
+                            //   child: MyNetworkImage(
+                            //     width: 50,
+                            //     height: 50,
+                            //     imagePath: shortProvider
+                            //             .shortVideoList?[index].portraitImg
+                            //             .toString() ??
+                            //         "",
+                            //     fit: BoxFit.cover,
+                            //   ),
+                            // ),
+                            // // Positioned.fill(
+                            //   child: Align(
+                            //     alignment: Alignment.center,
+                            //     child: MyImage(
+                            //         width: 30,
+                            //         height: 30,
+                            //         imagePath: "music.gif"),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ],

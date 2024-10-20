@@ -92,7 +92,7 @@ class _SplashState extends State<Splash> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return const Intro();
+              return const Bottombar();
             },
           ),
         );

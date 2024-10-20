@@ -408,17 +408,24 @@ class _SettingState extends State<Setting> {
           children: [
             isPages == true
                 ? MyNetworkImage(
-                    width: 22,
-                    height: 22,
-                    imagePath: imagepath,
+                    width: 30,
+                    height: 30,
+                    imagePath:  imagepath=="https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png" ?
+                    "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
+                     :
+                    imagepath
+                    ,
                     color: white,
                     isPagesIcon: true,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   )
                 : MyImage(
-                    width: 22,
-                    height: 22,
-                    imagePath: imagepath,
+                    width: 30,
+                    height: 30,
+                    imagePath: imagepath=="https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png" ?
+                    "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
+                     :
+                    imagepath,
                     color: white,
                   ),
             const SizedBox(width: 15),
