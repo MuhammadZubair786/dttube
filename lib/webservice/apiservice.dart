@@ -26,6 +26,7 @@ import 'package:dttube/model/getplaylistcontentmodel.dart';
 import 'package:dttube/model/getrentcontentbychannelmodel.dart';
 import 'package:dttube/model/getreportreasonmodel.dart';
 import 'package:dttube/model/getuserbyrentcontentmodel.dart';
+import 'package:dttube/model/hashtag.dart';
 import 'package:dttube/model/likevideosmodel.dart';
 import 'package:dttube/model/packagemodel.dart';
 import 'package:dttube/model/paymentoptionmodel.dart';
@@ -77,8 +78,7 @@ class ApiService {
     return generalsettingModel;
   }
 
-  Future<LoginModel> login(String type, String email, String mobile,
-      String devicetype, String devicetoken) async {
+  Future<LoginModel> login(String type, String email, String mobile, String devicetype, String devicetoken) async {
     LoginModel loginModel;
     String apiname = "login";
     Response response = await dio.post('$baseurl$apiname',
@@ -119,6 +119,21 @@ class ApiService {
         }));
     categoryModel = CategoryModel.fromJson(response.data);
     return categoryModel;
+  }
+
+  Future<List<Hashtag>> getHashTag() async {
+    List<Hashtag> hashModel = [];
+    String apiname = "hashtags";
+    Response response = await dio.get(
+      '$baseurl$apiname',
+    );
+
+    hashModel = List.from(response.data["hashtags"]
+        .map(
+          (item) => Hashtag.fromJson(item),
+        )
+        .toList());
+    return hashModel;
   }
 
   Future<SuccessModel> removesearchhistory(id) async {
@@ -197,8 +212,7 @@ class ApiService {
     return searchvideoModel;
   }
 
-  Future<AddCommentModel> addcomment(
-      contenttype, contentid, episodeid, comment, commentid) async {
+  Future<AddCommentModel> addcomment(contenttype, contentid, episodeid, comment, commentid) async {
     AddCommentModel addCommentModel;
     String apiname = "add_comment";
     Response response = await dio.post('$baseurl$apiname',
@@ -264,13 +278,7 @@ class ApiService {
   }
 
   Future<SuccessModel> updateprofile(
-      String userid,
-      String fullname,
-      String channelName,
-      String email,
-      String number,
-      File image,
-      File coverImage) async {
+      String userid, String fullname, String channelName, String email, String number, File image, File coverImage) async {
     SuccessModel updateprofileModel;
     String apiname = "update_profile";
     Response response = await dio.post('$baseurl$apiname',
@@ -321,8 +329,7 @@ class ApiService {
     return addViewModel;
   }
 
-  Future<SectionListModel> sectionList(
-      ishomescreen, contenttype, pageNo) async {
+  Future<SectionListModel> sectionList(ishomescreen, contenttype, pageNo) async {
     log("UserId==> ${Constant.userID}");
     SectionListModel sectionListModel;
     String apiname = "get_music_section";
@@ -350,8 +357,7 @@ class ApiService {
     return successModel;
   }
 
-  Future<AddremoveContentToPlaylistModel> addremoveContenttoPlaylist(
-      chennelId, playlistId, contenttype, contentid, episodeid, type) async {
+  Future<AddremoveContentToPlaylistModel> addremoveContenttoPlaylist(chennelId, playlistId, contenttype, contentid, episodeid, type) async {
     AddremoveContentToPlaylistModel addremoveContentToPlaylistModel;
     String apiname = "add_remove_content_to_playlist";
     Response response = await dio.post('$baseurl$apiname',
@@ -363,13 +369,11 @@ class ApiService {
           'episode_id': episodeid,
           'type': type,
         }));
-    addremoveContentToPlaylistModel =
-        AddremoveContentToPlaylistModel.fromJson(response.data);
+    addremoveContentToPlaylistModel = AddremoveContentToPlaylistModel.fromJson(response.data);
     return addremoveContentToPlaylistModel;
   }
 
-  Future<GetContentbyChannelModel> contentbyChannel(
-      userid, chennelId, contenttype, pageNo) async {
+  Future<GetContentbyChannelModel> contentbyChannel(userid, chennelId, contenttype, pageNo) async {
     GetContentbyChannelModel getContentbyChannelModel;
     String apiname = "get_content_by_channel";
     Response response = await dio.post('$baseurl$apiname',
@@ -383,8 +387,7 @@ class ApiService {
     return getContentbyChannelModel;
   }
 
-  Future<EditPlaylistModel> editPlaylist(
-      playlistId, title, playlistType) async {
+  Future<EditPlaylistModel> editPlaylist(playlistId, title, playlistType) async {
     EditPlaylistModel editPlaylistModel;
     String apiname = "edit_playlist";
     Response response = await dio.post('$baseurl$apiname',
@@ -408,8 +411,7 @@ class ApiService {
     return deletePlaylistModel;
   }
 
-  Future<AddRemoveLikeDislikeModel> addRemoveLikeDislike(
-      contenttype, contentid, status, episodeId) async {
+  Future<AddRemoveLikeDislikeModel> addRemoveLikeDislike(contenttype, contentid, status, episodeId) async {
     log("UserId==> ${Constant.userID}");
     AddRemoveLikeDislikeModel addRemoveLikeDislikeModel;
     String apiname = "add_remove_like_dislike";
@@ -421,8 +423,7 @@ class ApiService {
           'status': status,
           'episode_id': episodeId,
         }));
-    addRemoveLikeDislikeModel =
-        AddRemoveLikeDislikeModel.fromJson(response.data);
+    addRemoveLikeDislikeModel = AddRemoveLikeDislikeModel.fromJson(response.data);
     return addRemoveLikeDislikeModel;
   }
 
@@ -438,8 +439,7 @@ class ApiService {
     return getRepostReasonModel;
   }
 
-  Future<AddContentReportModel> addContentReport(
-      reportUserid, contentid, message, contenttype) async {
+  Future<AddContentReportModel> addContentReport(reportUserid, contentid, message, contenttype) async {
     AddContentReportModel addContentReportModel;
     String apiname = "add_content_report";
     Response response = await dio.post('$baseurl$apiname',
@@ -481,8 +481,7 @@ class ApiService {
     return likeContentModel;
   }
 
-  Future<AddremoveWatchlaterModel> addremoveWatchLater(
-      contenttype, contentid, episodeid, type) async {
+  Future<AddremoveWatchlaterModel> addremoveWatchLater(contenttype, contentid, episodeid, type) async {
     AddremoveWatchlaterModel addremoveWatchlaterModel;
     String apiname = "add_remove_watch_later";
     Response response = await dio.post('$baseurl$apiname',
@@ -510,8 +509,7 @@ class ApiService {
     return addremoveSubscribeModel;
   }
 
-  Future<AddcontenttoHistoryModel> addContentToHistory(
-      contenttype, contentid, stoptime, episodeid) async {
+  Future<AddcontenttoHistoryModel> addContentToHistory(contenttype, contentid, stoptime, episodeid) async {
     AddcontenttoHistoryModel addcontenttoHistoryModel;
     String apiname = "add_content_to_history";
     Response response = await dio.post('$baseurl$apiname',
@@ -526,8 +524,7 @@ class ApiService {
     return addcontenttoHistoryModel;
   }
 
-  Future<RemoveContentHistoryModel> removeContentToHistory(
-      contenttype, contentid, episodeid) async {
+  Future<RemoveContentHistoryModel> removeContentToHistory(contenttype, contentid, episodeid) async {
     RemoveContentHistoryModel removeContentHistoryModel;
     String apiname = "remove_content_to_history";
     Response response = await dio.post('$baseurl$apiname',
@@ -537,8 +534,7 @@ class ApiService {
           'content_id': contentid,
           'episode_id': episodeid,
         }));
-    removeContentHistoryModel =
-        RemoveContentHistoryModel.fromJson(response.data);
+    removeContentHistoryModel = RemoveContentHistoryModel.fromJson(response.data);
     return removeContentHistoryModel;
   }
 
@@ -556,8 +552,7 @@ class ApiService {
     return getHistoryModel;
   }
 
-  Future<AddremoveblockchannelModel> addremoveBlockChannel(
-      blockUserId, blockChannelId) async {
+  Future<AddremoveblockchannelModel> addremoveBlockChannel(blockUserId, blockChannelId) async {
     AddremoveblockchannelModel addremoveblockchannelModel;
     String apiname = "add_remove_block_channel";
     Response response = await dio.post('$baseurl$apiname',
@@ -566,8 +561,7 @@ class ApiService {
           'block_user_id': blockUserId,
           'block_channel_id': blockChannelId,
         }));
-    addremoveblockchannelModel =
-        AddremoveblockchannelModel.fromJson(response.data);
+    addremoveblockchannelModel = AddremoveblockchannelModel.fromJson(response.data);
     return addremoveblockchannelModel;
   }
 
@@ -632,8 +626,7 @@ class ApiService {
     return paymentOptionModel;
   }
 
-  Future<EpisodebyplaylistModel> episodeByPlaylist(
-      playlistId, contentType, pageNo) async {
+  Future<EpisodebyplaylistModel> episodeByPlaylist(playlistId, contentType, pageNo) async {
     EpisodebyplaylistModel episodebyplaylistModel;
     String apiname = "get_playlist_content";
     Response response = await dio.post('$baseurl$apiname',
@@ -751,8 +744,7 @@ class ApiService {
     return rentSectionModel;
   }
 
-  Future<GetRentContentbyChannel> getRentContentByChannel(
-      userId, channelId, pageNo) async {
+  Future<GetRentContentbyChannel> getRentContentByChannel(userId, channelId, pageNo) async {
     GetRentContentbyChannel getRentContentbyChannel;
     String apiname = "get_rent_content_by_channel";
     Response response = await dio.post('$baseurl$apiname',
@@ -778,8 +770,7 @@ class ApiService {
     return rentSectionModel;
   }
 
-  Future<SuccessModel> rentTransection(
-      contentId, price, discription, transectionId) async {
+  Future<SuccessModel> rentTransection(contentId, price, discription, transectionId) async {
     SuccessModel successModel;
     String apiname = "add_rent_transaction";
     Response response = await dio.post('$baseurl$apiname',
@@ -806,8 +797,7 @@ class ApiService {
     return getUserRentContentModel;
   }
 
-  Future<GetContentByPlaylistModel> contentByPlaylist(
-      contentType, pageNo) async {
+  Future<GetContentByPlaylistModel> contentByPlaylist(contentType, pageNo) async {
     GetContentByPlaylistModel getContentByPlaylistModel;
     String apiname = "get_content_to_playlist";
     Response response = await dio.post('$baseurl$apiname',
@@ -816,13 +806,11 @@ class ApiService {
           'content_type': contentType,
           'page_no': pageNo,
         }));
-    getContentByPlaylistModel =
-        GetContentByPlaylistModel.fromJson(response.data);
+    getContentByPlaylistModel = GetContentByPlaylistModel.fromJson(response.data);
     return getContentByPlaylistModel;
   }
 
-  Future<SuccessModel> addMultipleContentToPlaylist(
-      playlistId, contentType, contentIds) async {
+  Future<SuccessModel> addMultipleContentToPlaylist(playlistId, contentType, contentIds) async {
     SuccessModel successModel;
     String apiname = "add_multipal_content_to_playlist";
     Response response = await dio.post('$baseurl$apiname',
@@ -836,8 +824,7 @@ class ApiService {
     return successModel;
   }
 
-  Future<GetPlaylistContentModel> getPlaylistContent(
-      playlistId, contentType, pageNo) async {
+  Future<GetPlaylistContentModel> getPlaylistContent(playlistId, contentType, pageNo) async {
     GetPlaylistContentModel getPlaylistContentModel;
     String apiname = "get_playlist_content";
     Response response = await dio.post('$baseurl$apiname',
@@ -860,8 +847,7 @@ class ApiService {
   }
 
   // update_profile API
-  Future<SuccessModel> updateDataForPayment(
-      fullName, email, mobileNumber) async {
+  Future<SuccessModel> updateDataForPayment(fullName, email, mobileNumber) async {
     debugPrint("updateDataForPayment userID :====> ${Constant.userID}");
     debugPrint("updateDataForPayment fullName :==> $fullName");
     debugPrint("updateDataForPayment email :=====> $email");
@@ -915,8 +901,7 @@ class ApiService {
   Future<SuccessModel> logout() async {
     SuccessModel successModel;
     String apiname = "logout";
-    Response response = await dio.post('$baseurl$apiname',
-        data: FormData.fromMap({'user_id': Constant.userID}));
+    Response response = await dio.post('$baseurl$apiname', data: FormData.fromMap({'user_id': Constant.userID}));
     successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }

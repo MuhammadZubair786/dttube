@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dttube/pages/chatpage.dart';
 import 'package:dttube/pages/login.dart';
+import 'package:dttube/pages/update.dart';
 import 'package:dttube/pages/videorecord/videorecord.dart';
 import 'package:dttube/provider/generalprovider.dart';
 import 'package:dttube/provider/profileprovider.dart';
@@ -46,17 +47,13 @@ class BottombarState extends State<Bottombar> {
 
   getData() async {
     final generalsetting = Provider.of<GeneralProvider>(context, listen: false);
-    final profileProvider =
-        Provider.of<ProfileProvider>(context, listen: false);
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
     Constant.isBuy = await sharedPre.read("userIsBuy");
     pushNotification();
     if (!mounted) return;
     if (Constant.userID != null) {
       await profileProvider.getprofile(context, Constant.userID);
-      Constant.userPanelStatus = await sharedPre.save(
-          "userpanelstatus",
-          profileProvider.profileModel.result?[0].userPenalStatus.toString() ??
-              "");
+      Constant.userPanelStatus = await sharedPre.save("userpanelstatus", profileProvider.profileModel.result?[0].userPenalStatus.toString() ?? "");
     } else {
       Utils.updatePremium("0");
       Utils.loadAds(context);
@@ -84,8 +81,7 @@ class BottombarState extends State<Bottombar> {
         debugPrint("Has permission ==> $state");
       });
       OneSignal.User.pushSubscription.addObserver((state) {
-        debugPrint(
-            "pushSubscription state ==> ${state.current.jsonRepresentation()}");
+        debugPrint("pushSubscription state ==> ${state.current.jsonRepresentation()}");
       });
       OneSignal.Notifications.addForegroundWillDisplayListener((event) {
         /// preventDefault to not display the notification
@@ -99,16 +95,15 @@ class BottombarState extends State<Bottombar> {
   }
 
   static List<Widget> widgetOptions = <Widget>[
-   
     const Short(),
-     const Home(),
+    const Update(),
     const VideoRecord(
       contestId: '',
       contestImg: '',
       hashtagId: '',
       hashtagName: '',
     ),
-   ChatListScreen(),
+    ChatListScreen(),
     const Setting(),
   ];
 
@@ -178,9 +173,7 @@ class BottombarState extends State<Bottombar> {
           Center(
             child: widgetOptions.elementAt(selectedIndex),
           ),
-          selectedIndex == 1 || selectedIndex == 2
-              ? const SizedBox.shrink()
-              : Utils.buildMusicPanel(context),
+          selectedIndex == 1 || selectedIndex == 2 ? const SizedBox.shrink() : Utils.buildMusicPanel(context),
         ],
       ),
       bottomNavigationBar: Column(
@@ -195,8 +188,7 @@ class BottombarState extends State<Bottombar> {
             selectedIconTheme: const IconThemeData(color: colorAccent),
             unselectedIconTheme: const IconThemeData(color: gray),
             elevation: 5,
-            unselectedLabelStyle:
-                GoogleFonts.inter(fontSize: Dimens.textbottomNav, color: gray),
+            unselectedLabelStyle: GoogleFonts.inter(fontSize: Dimens.textbottomNav, color: gray),
             currentIndex: selectedIndex,
             unselectedItemColor: gray,
             selectedItemColor: white,
@@ -206,101 +198,99 @@ class BottombarState extends State<Bottombar> {
                 label: "Reels",
                 backgroundColor: colorPrimary,
                 activeIcon: RadiantGradientMask(
-                  child:
-                  Icon(Icons.video_collection_outlined,color:Colors.red,
-                  size:  40,
-                  )
-                
-                ),
-                icon: Align(
-                  alignment: Alignment.center,
-                  child:Icon(Icons.video_collection_outlined,color:Colors.grey)
-                  //  MyImage(
-                  //   imagePath: "ic_short.png",
-                  //   width: Dimens.iconbottomNav,
-                  //   height: Dimens.iconbottomNav,
-                  //   color: gray,
-                  // ),
-                ),
+                    child: Icon(
+                  Icons.video_collection_outlined,
+                  color: Colors.red,
+                  size: 40,
+                )),
+                icon: Align(alignment: Alignment.center, child: Icon(Icons.video_collection_outlined, color: Colors.grey)
+                    //  MyImage(
+                    //   imagePath: "ic_short.png",
+                    //   width: Dimens.iconbottomNav,
+                    //   height: Dimens.iconbottomNav,
+                    //   color: gray,
+                    // ),
+                    ),
               ),
               BottomNavigationBarItem(
                 backgroundColor: colorPrimary,
                 label: "Update",
                 activeIcon: RadiantGradientMask(
-                  child: 
-                 Icon(Icons.update,color:Colors.red,
-                  size:  40,
-                  )
-                  //   imagePath: "ic_home.png",
-                  //   width: Dimens.iconbottomNav,
-                  //   height: Dimens.iconbottomNav,
-                  // ),
-                ),
-                icon: Align(
-                  alignment: Alignment.center,
-                  child:Icon(Icons.update,color:Colors.grey)
-                ),
+                    child: Icon(
+                  Icons.update,
+                  color: Colors.red,
+                  size: 40,
+                )
+                    //   imagePath: "ic_home.png",
+                    //   width: Dimens.iconbottomNav,
+                    //   height: Dimens.iconbottomNav,
+                    // ),
+                    ),
+                icon: Align(alignment: Alignment.center, child: Icon(Icons.update, color: Colors.grey)),
               ),
-              
               BottomNavigationBarItem(
                 label: "Post",
                 backgroundColor: colorPrimary,
                 activeIcon: Container(
-                  padding: const EdgeInsets.all(0),
-                  child: Icon(Icons.post_add,color: Colors.red,size:40,)
-                  
-                  // MyImage(
-                  //   imagePath: "ic_post.png",
-                  //   width: Dimens.centerIconbottomNav,
-                  //   height: Dimens.centerIconbottomNav,
-                  // ),
-                ),
-                icon: Container(
-                  padding: const EdgeInsets.all(0),
-                  child: Icon(Icons.post_add)
-                  // MyImage(
-                  //   width: Dimens.centerIconbottomNav,
-                  //   height: Dimens.centerIconbottomNav,
-                  //   imagePath: "ic_post.png",
-                  // ),
-                ),
+                    padding: const EdgeInsets.all(0),
+                    child: Icon(
+                      Icons.post_add,
+                      color: Colors.red,
+                      size: 40,
+                    )
+
+                    // MyImage(
+                    //   imagePath: "ic_post.png",
+                    //   width: Dimens.centerIconbottomNav,
+                    //   height: Dimens.centerIconbottomNav,
+                    // ),
+                    ),
+                icon: Container(padding: const EdgeInsets.all(0), child: Icon(Icons.post_add)
+                    // MyImage(
+                    //   width: Dimens.centerIconbottomNav,
+                    //   height: Dimens.centerIconbottomNav,
+                    //   imagePath: "ic_post.png",
+                    // ),
+                    ),
               ),
               BottomNavigationBarItem(
                 backgroundColor: colorPrimary,
                 label: "Chat",
                 activeIcon: RadiantGradientMask(
-                  child:Icon(Icons.chat,color:Colors.red,
-                  size:  40,)
-                ),
-                icon: Align(
-                  alignment: Alignment.center,
-                  child:Icon(Icons.chat)
-                ),
+                    child: Icon(
+                  Icons.chat,
+                  color: Colors.red,
+                  size: 40,
+                )),
+                icon: Align(alignment: Alignment.center, child: Icon(Icons.chat)),
               ),
               BottomNavigationBarItem(
                 backgroundColor: colorPrimary,
                 label: "Setting",
                 activeIcon: RadiantGradientMask(
-                  child:
-                  Icon(Icons.settings,color:Colors.red,
-                  size:  40,)
-                  //  MyImage(
-                  //   imagePath: "ic_setting.png",
-                  //   width: Dimens.iconbottomNav,
-                  //   height: Dimens.iconbottomNav,
-                  // ),
-                ),
+                    child: Icon(
+                  Icons.settings,
+                  color: Colors.red,
+                  size: 40,
+                )
+                    //  MyImage(
+                    //   imagePath: "ic_setting.png",
+                    //   width: Dimens.iconbottomNav,
+                    //   height: Dimens.iconbottomNav,
+                    // ),
+                    ),
                 icon: Align(
-                  alignment: Alignment.center,
-                  child:
-                   Icon(Icons.settings,)
-                  //  MyImage(
-                  //   width: Dimens.iconbottomNav,
-                  //   height: Dimens.iconbottomNav,
-                  //   color: gray,
-                  //   imagePath: "ic_setting.png",
-                  // ),
-                ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.settings,
+                    )
+                    //  MyImage(
+                    //   width: Dimens.iconbottomNav,
+                    //   height: Dimens.iconbottomNav,
+                    //   color: gray,
+                    //   imagePath: "ic_setting.png",
+                    // ),
+                    ),
               ),
             ],
             onTap: _onItemTapped,

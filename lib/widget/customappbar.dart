@@ -43,11 +43,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return
-     PreferredSize(
+    return PreferredSize(
       preferredSize: const Size.fromHeight(50),
       child: AppBar(
-        backgroundColor: colorPrimary,
+        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: false,
@@ -65,8 +64,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 children: [
                   InkWell(
                       onTap: () {
-                        AdHelper.showFullscreenAd(
-                            context, Constant.rewardAdType, () {
+                        AdHelper.showFullscreenAd(context, Constant.rewardAdType, () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -79,8 +77,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           );
                         });
                       },
-                      child: MyImage(
-                          width: 20, height: 20, imagePath: "ic_search.png")),
+                      child: MyImage(width: 20, height: 20, imagePath: "ic_search.png")),
                   const SizedBox(width: 15),
                   // InkWell(
                   //     onTap: () {

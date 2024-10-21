@@ -17,15 +17,13 @@ import '../model/videolistmodel.dart';
 class HomeProvider extends ChangeNotifier {
   VideoListModel videolistmodel = VideoListModel();
   CategoryModel categorymodel = CategoryModel();
+  var HashTag = [];
   GetRepostReasonModel getRepostReasonModel = GetRepostReasonModel();
   AddContentReportModel addContentReportModel = AddContentReportModel();
   ProfileModel profileModel = ProfileModel();
-  AddremoveContentToPlaylistModel addremoveContentToPlaylistModel =
-      AddremoveContentToPlaylistModel();
-  GetContentbyChannelModel getContentbyChannelModel =
-      GetContentbyChannelModel();
-  AddremoveWatchlaterModel addremoveWatchlaterModel =
-      AddremoveWatchlaterModel();
+  AddremoveContentToPlaylistModel addremoveContentToPlaylistModel = AddremoveContentToPlaylistModel();
+  GetContentbyChannelModel getContentbyChannelModel = GetContentbyChannelModel();
+  AddremoveWatchlaterModel addremoveWatchlaterModel = AddremoveWatchlaterModel();
   SuccessModel createPlaylistModel = SuccessModel();
   bool loading = false;
   int catindex = 0;
@@ -33,9 +31,7 @@ class HomeProvider extends ChangeNotifier {
   int position = 0;
   bool ischack = false;
 
-  bool addcontentreortloading = false,
-      addremovecontentplaylistloading = false,
-      addwatchlaterloading = false;
+  bool addcontentreortloading = false, addremovecontentplaylistloading = false, addwatchlaterloading = false;
 
 /* Video List Data */
   List<video.Result>? videoList = [];
@@ -84,26 +80,25 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getHashTagTitles() async {
+    categoryloading = true;
+    HashTag = await ApiService().getHashTag();
+
+    notifyListeners();
+  }
+
 /* CategoryList Api Start */
 
   Future<void> getVideoCategory(pageNo) async {
     categoryloading = true;
     categorymodel = await ApiService().videoCategory(pageNo);
     if (categorymodel.status == 200) {
-      setCategoryPaginationData(
-          categorymodel.totalRows,
-          categorymodel.totalPage,
-          categorymodel.currentPage,
-          categorymodel.morePage);
-      if (categorymodel.result != null &&
-          (categorymodel.result?.length ?? 0) > 0) {
-        debugPrint(
-            "followingModel length :==> ${(categorymodel.result?.length ?? 0)}");
+      setCategoryPaginationData(categorymodel.totalRows, categorymodel.totalPage, categorymodel.currentPage, categorymodel.morePage);
+      if (categorymodel.result != null && (categorymodel.result?.length ?? 0) > 0) {
+        debugPrint("followingModel length :==> ${(categorymodel.result?.length ?? 0)}");
         debugPrint('Now on page ==========> $categorycurrentPage');
-        if (categorymodel.result != null &&
-            (categorymodel.result?.length ?? 0) > 0) {
-          debugPrint(
-              "followingModel length :==> ${(categorymodel.result?.length ?? 0)}");
+        if (categorymodel.result != null && (categorymodel.result?.length ?? 0) > 0) {
+          debugPrint("followingModel length :==> ${(categorymodel.result?.length ?? 0)}");
           for (var i = 0; i < (categorymodel.result?.length ?? 0); i++) {
             categorydataList?.add(cat.Result(id: 0, name: "Home"));
             categorydataList?.add(categorymodel.result?[i] ?? cat.Result());
@@ -113,8 +108,7 @@ class HomeProvider extends ChangeNotifier {
             postMap[item.id ?? 0] = item;
           });
           categorydataList = postMap.values.toList();
-          debugPrint(
-              "categoryList length :==> ${(categorydataList?.length ?? 0)}");
+          debugPrint("categoryList length :==> ${(categorydataList?.length ?? 0)}");
           setCategoryLoadMore(false);
         }
       }
@@ -123,8 +117,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setCategoryPaginationData(int? categorytotalRows, int? categorytotalPage,
-      int? categorycurrentPage, bool? videolistisMorePage) {
+  setCategoryPaginationData(int? categorytotalRows, int? categorytotalPage, int? categorycurrentPage, bool? videolistisMorePage) {
     this.categorycurrentPage = categorycurrentPage;
     this.categorytotalRows = categorytotalRows;
     this.categorytotalPage = categorytotalPage;
@@ -143,24 +136,15 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> getvideolist(ishomePage, categoryid, pageNo) async {
     videoloading = true;
-    videolistmodel =
-        await ApiService().videolist(ishomePage, categoryid, pageNo);
+    videolistmodel = await ApiService().videolist(ishomePage, categoryid, pageNo);
     if (videolistmodel.status == 200) {
-      setVideoListPaginationData(
-          videolistmodel.totalRows,
-          videolistmodel.totalPage,
-          videolistmodel.currentPage,
-          videolistmodel.morePage);
+      setVideoListPaginationData(videolistmodel.totalRows, videolistmodel.totalPage, videolistmodel.currentPage, videolistmodel.morePage);
 
-      if (videolistmodel.result != null &&
-          (videolistmodel.result?.length ?? 0) > 0) {
-        debugPrint(
-            "followingModel length :==> ${(videolistmodel.result?.length ?? 0)}");
+      if (videolistmodel.result != null && (videolistmodel.result?.length ?? 0) > 0) {
+        debugPrint("followingModel length :==> ${(videolistmodel.result?.length ?? 0)}");
         debugPrint('Now on page ==========> $videolistcurrentPage');
-        if (videolistmodel.result != null &&
-            (videolistmodel.result?.length ?? 0) > 0) {
-          debugPrint(
-              "followingModel length :==> ${(videolistmodel.result?.length ?? 0)}");
+        if (videolistmodel.result != null && (videolistmodel.result?.length ?? 0) > 0) {
+          debugPrint("followingModel length :==> ${(videolistmodel.result?.length ?? 0)}");
           for (var i = 0; i < (videolistmodel.result?.length ?? 0); i++) {
             videoList?.add(videolistmodel.result?[i] ?? video.Result());
           }
@@ -169,8 +153,7 @@ class HomeProvider extends ChangeNotifier {
             postMap[item.id ?? 0] = item;
           });
           videoList = postMap.values.toList();
-          debugPrint(
-              "followFollowingList length :==> ${(videoList?.length ?? 0)}");
+          debugPrint("followFollowingList length :==> ${(videoList?.length ?? 0)}");
           setVideoListLoadMore(false);
         }
       }
@@ -179,8 +162,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setVideoListPaginationData(int? videolisttotalRows, int? videolisttotalPage,
-      int? videolistcurrentPage, bool? videolistisMorePage) {
+  setVideoListPaginationData(int? videolisttotalRows, int? videolisttotalPage, int? videolistcurrentPage, bool? videolistisMorePage) {
     this.videolistcurrentPage = videolistcurrentPage;
     this.videolisttotalRows = videolisttotalRows;
     this.videolisttotalPage = videolisttotalPage;
@@ -205,29 +187,21 @@ class HomeProvider extends ChangeNotifier {
     debugPrint("getPostList message :==> ${getRepostReasonModel.message}");
     if (getRepostReasonModel.status == 200) {
       setReportReasonPaginationData(
-          getRepostReasonModel.totalRows,
-          getRepostReasonModel.totalPage,
-          getRepostReasonModel.currentPage,
-          getRepostReasonModel.morePage);
-      if (getRepostReasonModel.result != null &&
-          (getRepostReasonModel.result?.length ?? 0) > 0) {
-        debugPrint(
-            "postModel length first:==> ${(getRepostReasonModel.result?.length ?? 0)}");
+          getRepostReasonModel.totalRows, getRepostReasonModel.totalPage, getRepostReasonModel.currentPage, getRepostReasonModel.morePage);
+      if (getRepostReasonModel.result != null && (getRepostReasonModel.result?.length ?? 0) > 0) {
+        debugPrint("postModel length first:==> ${(getRepostReasonModel.result?.length ?? 0)}");
 
-        debugPrint(
-            "postModel length :==> ${(getRepostReasonModel.result?.length ?? 0)}");
+        debugPrint("postModel length :==> ${(getRepostReasonModel.result?.length ?? 0)}");
 
         for (var i = 0; i < (getRepostReasonModel.result?.length ?? 0); i++) {
-          reportReasonList
-              ?.add(getRepostReasonModel.result?[i] ?? report.Result());
+          reportReasonList?.add(getRepostReasonModel.result?[i] ?? report.Result());
         }
         final Map<int, report.Result> postMap = {};
         reportReasonList?.forEach((item) {
           postMap[item.id ?? 0] = item;
         });
         reportReasonList = postMap.values.toList();
-        debugPrint(
-            "Report Reason length :==> ${(reportReasonList?.length ?? 0)}");
+        debugPrint("Report Reason length :==> ${(reportReasonList?.length ?? 0)}");
         setReportReasonLoadMore(false);
       }
     } else {
@@ -237,8 +211,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setReportReasonPaginationData(int? reporttotalRows, int? reporttotalPage,
-      int? reportcurrentPage, bool? reportmorePage) {
+  setReportReasonPaginationData(int? reporttotalRows, int? reporttotalPage, int? reportcurrentPage, bool? reportmorePage) {
     this.reportcurrentPage = reportcurrentPage;
     this.reporttotalRows = reporttotalRows;
     this.reporttotalPage = reporttotalPage;
@@ -263,56 +236,39 @@ class HomeProvider extends ChangeNotifier {
 
   addContentReport(reportUserid, contentid, message, contenttype) async {
     addcontentreortloading = true;
-    addContentReportModel = await ApiService()
-        .addContentReport(reportUserid, contentid, message, contenttype);
+    addContentReportModel = await ApiService().addContentReport(reportUserid, contentid, message, contenttype);
     addcontentreortloading = false;
     notifyListeners();
   }
 
   /* Type = 1 = Add */
   /* Type = 2 = Remove */
-  addremoveContentToPlaylist(
-      chennelId, playlistId, contenttype, contentid, episodeid, type) async {
+  addremoveContentToPlaylist(chennelId, playlistId, contenttype, contentid, episodeid, type) async {
     addremovecontentplaylistloading = true;
-    addremoveContentToPlaylistModel = await ApiService()
-        .addremoveContenttoPlaylist(
-            chennelId, playlistId, contenttype, contentid, episodeid, type);
+    addremoveContentToPlaylistModel = await ApiService().addremoveContenttoPlaylist(chennelId, playlistId, contenttype, contentid, episodeid, type);
     addremovecontentplaylistloading = false;
     notifyListeners();
   }
 
 /* Get Playlist Created By Perticular User Start */
 
-  Future<void> getcontentbyChannel(
-      userid, chennelId, contenttype, pageNo) async {
+  Future<void> getcontentbyChannel(userid, chennelId, contenttype, pageNo) async {
     debugPrint("Playlist Position :==> $playlistPosition");
     debugPrint("getPostList pageNo :==> $pageNo");
     playlistLoading = true;
-    getContentbyChannelModel = await ApiService()
-        .contentbyChannel(userid, chennelId, contenttype, pageNo);
-    debugPrint(
-        "getPlaylistList status :===> ${getContentbyChannelModel.status}");
-    debugPrint(
-        "getPlaylistList message :==> ${getContentbyChannelModel.message}");
+    getContentbyChannelModel = await ApiService().contentbyChannel(userid, chennelId, contenttype, pageNo);
+    debugPrint("getPlaylistList status :===> ${getContentbyChannelModel.status}");
+    debugPrint("getPlaylistList message :==> ${getContentbyChannelModel.message}");
     if (getContentbyChannelModel.status == 200) {
-      setPlaylistPaginationData(
-          getContentbyChannelModel.totalRows,
-          getContentbyChannelModel.totalPage,
-          getContentbyChannelModel.currentPage,
+      setPlaylistPaginationData(getContentbyChannelModel.totalRows, getContentbyChannelModel.totalPage, getContentbyChannelModel.currentPage,
           getContentbyChannelModel.morePage);
-      if (getContentbyChannelModel.result != null &&
-          (getContentbyChannelModel.result?.length ?? 0) > 0) {
-        debugPrint(
-            "Playlist length first:==> ${(getContentbyChannelModel.result?.length ?? 0)}");
+      if (getContentbyChannelModel.result != null && (getContentbyChannelModel.result?.length ?? 0) > 0) {
+        debugPrint("Playlist length first:==> ${(getContentbyChannelModel.result?.length ?? 0)}");
 
-        debugPrint(
-            "Playlist length :==> ${(getContentbyChannelModel.result?.length ?? 0)}");
+        debugPrint("Playlist length :==> ${(getContentbyChannelModel.result?.length ?? 0)}");
 
-        for (var i = 0;
-            i < (getContentbyChannelModel.result?.length ?? 0);
-            i++) {
-          playlistData
-              ?.add(getContentbyChannelModel.result?[i] ?? playlist.Result());
+        for (var i = 0; i < (getContentbyChannelModel.result?.length ?? 0); i++) {
+          playlistData?.add(getContentbyChannelModel.result?[i] ?? playlist.Result());
         }
         final Map<int, playlist.Result> postMap = {};
         playlistData?.forEach((item) {
@@ -327,8 +283,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setPlaylistPaginationData(int? playlisttotalRows, int? playlisttotalPage,
-      int? playlistcurrentPage, bool? playlistmorePage) {
+  setPlaylistPaginationData(int? playlisttotalRows, int? playlisttotalPage, int? playlistcurrentPage, bool? playlistmorePage) {
     this.playlistcurrentPage = playlistcurrentPage;
     this.playlisttotalRows = playlisttotalRows;
     this.playlisttotalPage = playlisttotalPage;
@@ -358,8 +313,7 @@ class HomeProvider extends ChangeNotifier {
 
   getcreatePlayList(chennelId, title, playlistType) async {
     loading = true;
-    createPlaylistModel =
-        await ApiService().createPlayList(chennelId, title, playlistType);
+    createPlaylistModel = await ApiService().createPlayList(chennelId, title, playlistType);
     loading = false;
   }
 
@@ -367,8 +321,7 @@ class HomeProvider extends ChangeNotifier {
 
   addremoveWatchLater(contenttype, contentid, episodeid, type) async {
     addwatchlaterloading = true;
-    addremoveWatchlaterModel = await ApiService()
-        .addremoveWatchLater(contenttype, contentid, episodeid, type);
+    addremoveWatchlaterModel = await ApiService().addremoveWatchLater(contenttype, contentid, episodeid, type);
     addwatchlaterloading = false;
     notifyListeners();
   }

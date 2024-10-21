@@ -199,28 +199,7 @@ class _SettingState extends State<Setting> {
                 );
               });
             }),
-            /* download Page */
-            // settingItem("ic_download.png", "download", false, () {
-            //   if (Constant.userID == null) {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) {
-            //           return const Login();
-            //         },
-            //       ),
-            //     );
-            //   } else {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) {
-            //           return const Download();
-            //         },
-            //       ),
-            //     );
-            //   }
-            // }),
+
             /* rent Page */
             settingItem("rent.png", "rent", false, () {
               AdHelper.showFullscreenAd(context, Constant.interstialAdType, () {
@@ -320,8 +299,7 @@ class _SettingState extends State<Setting> {
             /* Get Pages Api*/
             buildPages(),
             /* UserPanel Dilog Sheet */
-            Consumer<SettingProvider>(
-                builder: (context, profileprovider, child) {
+            Consumer<SettingProvider>(builder: (context, profileprovider, child) {
               if (Constant.userID == null) {
                 return const SizedBox.shrink();
               } else {
@@ -330,9 +308,7 @@ class _SettingState extends State<Setting> {
                 } else {
                   return settingItem("userpanel.png", "userpanel", false, () {
                     debugPrint("userpanal==>${Constant.userPanelStatus}");
-                    if (Constant.userPanelStatus == "0" ||
-                        Constant.userPanelStatus == "" ||
-                        Constant.userPanelStatus == null) {
+                    if (Constant.userPanelStatus == "0" || Constant.userPanelStatus == "" || Constant.userPanelStatus == null) {
                       userPanelActiveDilog();
                     } else {
                       edituserPanelDilog();
@@ -346,12 +322,8 @@ class _SettingState extends State<Setting> {
               _languageChangeDialog();
             }),
             /* Login Logout */
-            settingItem("ic_logout.png",
-                Constant.userID != null ? "logout" : "login", false, () {
-              Constant.userID != null
-                  ? logoutConfirmDialog()
-                  : Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login()));
+            settingItem("ic_logout.png", Constant.userID != null ? "logout" : "login", false, () {
+              Constant.userID != null ? logoutConfirmDialog() : Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
             }),
 
             Utils.miniPlayerSpace(),
@@ -362,31 +334,30 @@ class _SettingState extends State<Setting> {
   }
 
   Widget buildPages() {
-    return Consumer<SettingProvider>(
-        builder: (context, settingprovider, child) {
+    return Consumer<SettingProvider>(builder: (context, settingprovider, child) {
       return ListView.builder(
           itemCount: settingprovider.getpagesModel.result?.length ?? 0,
           scrollDirection: Axis.vertical,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-            return settingItem(
-                settingprovider.getpagesModel.result?[index].icon.toString() ??
-                    "",
-                settingprovider.getpagesModel.result?[index].title.toString() ??
-                    "",
-                true, () {
+            return settingItem(settingprovider.getpagesModel.result?[index].icon.toString() ?? "",
+                settingprovider.getpagesModel.result?[index].title.toString() ?? "", true, () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
                     return Commonpage(
-                      title: settingprovider.getpagesModel.result?[index].title
-                              .toString() ??
-                          "",
-                      url: settingprovider.getpagesModel.result?[index].url
-                              .toString() ??
-                          "",
+                      title: settingprovider.getpagesModel.result?[index].title.toString() ?? "",
+                      url: settingprovider.getpagesModel.result?[index].title.toString() == "Youth Page Website"
+                          ? "https://youthpagenetwork.online/"
+                          : settingprovider.getpagesModel.result?[index].title.toString() == "Be Youth page investor"
+                              ? "https://youthpagenetwork.online/investor.html"
+                              : settingprovider.getpagesModel.result?[index].title.toString() == "Work From Home"
+                                  ? "https://youthpagenetwork.online/service.html"
+                                  : settingprovider.getpagesModel.result?[index].title.toString() == "Contact Adminstrator"
+                                      ? "https://youthpagenetwork.online/contact.html"
+                                      : settingprovider.getpagesModel.result?[index].url.toString() ?? "",
                     );
                   },
                 ),
@@ -410,11 +381,9 @@ class _SettingState extends State<Setting> {
                 ? MyNetworkImage(
                     width: 30,
                     height: 30,
-                    imagePath:  imagepath=="https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png" ?
-                    "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
-                     :
-                    imagepath
-                    ,
+                    imagePath: imagepath == "https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png"
+                        ? "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
+                        : imagepath,
                     color: white,
                     isPagesIcon: true,
                     fit: BoxFit.cover,
@@ -422,10 +391,9 @@ class _SettingState extends State<Setting> {
                 : MyImage(
                     width: 30,
                     height: 30,
-                    imagePath: imagepath=="https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png" ?
-                    "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
-                     :
-                    imagepath,
+                    imagePath: imagepath == "https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png"
+                        ? "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
+                        : imagepath,
                     color: white,
                   ),
             const SizedBox(width: 15),
@@ -480,8 +448,7 @@ class _SettingState extends State<Setting> {
         return Dialog(
           backgroundColor: colorPrimaryDark,
           insetAnimationCurve: Curves.bounceInOut,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
           insetPadding: const EdgeInsets.all(10),
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -491,8 +458,7 @@ class _SettingState extends State<Setting> {
             decoration: BoxDecoration(
               color: colorAccent.withOpacity(0.10),
             ),
-            child: Consumer<SettingProvider>(
-                builder: (context, settingprovider, child) {
+            child: Consumer<SettingProvider>(builder: (context, settingprovider, child) {
               return Column(
                 children: [
                   MyText(
@@ -513,23 +479,19 @@ class _SettingState extends State<Setting> {
                     controller: passwordController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    style: Utils.googleFontStyle(1, Dimens.textBig,
-                        FontStyle.normal, white, FontWeight.w500),
+                    style: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, white, FontWeight.w500),
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         icon: Icon(
                           color: white,
-                          settingprovider.isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          settingprovider.isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           settingprovider.passwordHideShow();
                         },
                       ),
                       hintText: "Give your User Panel Password",
-                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig,
-                          FontStyle.normal, gray, FontWeight.w500),
+                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, gray, FontWeight.w500),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: gray),
                       ),
@@ -575,10 +537,7 @@ class _SettingState extends State<Setting> {
                           height: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: settingprovider.isUserpanelType == "on" &&
-                                      settingprovider.isActive == true
-                                  ? colorAccent
-                                  : colorPrimaryDark,
+                              color: settingprovider.isUserpanelType == "on" && settingprovider.isActive == true ? colorAccent : colorPrimaryDark,
                               shape: BoxShape.circle),
                           child: MyText(
                               color: white,
@@ -604,10 +563,7 @@ class _SettingState extends State<Setting> {
                           height: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: settingprovider.isUserpanelType == "off" &&
-                                      settingprovider.isActive == true
-                                  ? colorAccent
-                                  : colorPrimaryDark,
+                              color: settingprovider.isUserpanelType == "off" && settingprovider.isActive == true ? colorAccent : colorPrimaryDark,
                               shape: BoxShape.circle),
                           child: MyText(
                               color: white,
@@ -668,26 +624,19 @@ class _SettingState extends State<Setting> {
                         child: InkWell(
                           onTap: () async {
                             if (passwordController.text.isEmpty) {
-                              Utils.showSnackbar(
-                                  context, "pleaseenteryourpassword");
+                              Utils.showSnackbar(context, "pleaseenteryourpassword");
                             } else if (passwordController.text.length != 6) {
-                              Utils.showSnackbar(
-                                  context, "passwordmustbesixcharecter");
-                            } else if (settingprovider.isUserpanelType ==
-                                "off") {
-                              Utils.showSnackbar(
-                                  context, "pleaseselectuserpanelstatus");
+                              Utils.showSnackbar(context, "passwordmustbesixcharecter");
+                            } else if (settingprovider.isUserpanelType == "off") {
+                              Utils.showSnackbar(context, "pleaseselectuserpanelstatus");
                             } else {
                               /* Userpanal Api */
-                              await settingProvider.getActiveUserPanel(
-                                  passwordController.text,
-                                  settingprovider.isActiveType);
+                              await settingProvider.getActiveUserPanel(passwordController.text, settingprovider.isActiveType);
                               if (!mounted) return;
                               Navigator.pop(context);
                               settingprovider.clearUserPanel();
                               passwordController.clear();
-                              Utils.showSnackbar(
-                                  context, "userpanalactivesuccsessfully");
+                              Utils.showSnackbar(context, "userpanalactivesuccsessfully");
                             }
                           },
                           child: Container(
@@ -736,8 +685,7 @@ class _SettingState extends State<Setting> {
         return Dialog(
           backgroundColor: colorPrimaryDark,
           insetAnimationCurve: Curves.bounceInOut,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
           insetPadding: const EdgeInsets.all(10),
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -747,8 +695,7 @@ class _SettingState extends State<Setting> {
             decoration: BoxDecoration(
               color: colorAccent.withOpacity(0.10),
             ),
-            child: Consumer<SettingProvider>(
-                builder: (context, settingprovider, child) {
+            child: Consumer<SettingProvider>(builder: (context, settingprovider, child) {
               return Column(
                 children: [
                   MyText(
@@ -769,23 +716,19 @@ class _SettingState extends State<Setting> {
                     controller: passwordController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    style: Utils.googleFontStyle(1, Dimens.textBig,
-                        FontStyle.normal, white, FontWeight.w500),
+                    style: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, white, FontWeight.w500),
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         icon: Icon(
                           color: white,
-                          settingprovider.isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          settingprovider.isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           settingprovider.passwordHideShow();
                         },
                       ),
                       hintText: "Give your User Panel Password",
-                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig,
-                          FontStyle.normal, gray, FontWeight.w500),
+                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, gray, FontWeight.w500),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: gray),
                       ),
@@ -837,20 +780,16 @@ class _SettingState extends State<Setting> {
                         child: InkWell(
                           onTap: () async {
                             if (passwordController.text.isEmpty) {
-                              Utils.showSnackbar(
-                                  context, "pleaseenteryourpassword");
+                              Utils.showSnackbar(context, "pleaseenteryourpassword");
                             } else if (passwordController.text.length != 6) {
-                              Utils.showSnackbar(
-                                  context, "passwordmustbesixcharecter");
+                              Utils.showSnackbar(context, "passwordmustbesixcharecter");
                             } else {
                               /* Userpanal Api */
-                              await settingProvider.getActiveUserPanel(
-                                  passwordController.text, "1");
+                              await settingProvider.getActiveUserPanel(passwordController.text, "1");
                               if (!mounted) return;
                               Navigator.pop(context);
                               passwordController.clear();
-                              Utils.showSnackbar(
-                                  context, "passwordchangesuccsessfully");
+                              Utils.showSnackbar(context, "passwordchangesuccsessfully");
                             }
                           },
                           child: Container(
@@ -1214,9 +1153,7 @@ class _SettingState extends State<Setting> {
                           isPositive: true,
                           isMultilang: true,
                           onClick: () async {
-                            final profileProvider =
-                                Provider.of<ProfileProvider>(context,
-                                    listen: false);
+                            final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
                             await settingProvider.getLogout();
                             await profileProvider.clearProvider();
                             // Firebase Signout
@@ -1266,9 +1203,7 @@ class _SettingState extends State<Setting> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: isPositive ? colorAccent : transparent,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(width: 0.5, color: white)),
+            color: isPositive ? colorAccent : transparent, borderRadius: BorderRadius.circular(5), border: Border.all(width: 0.5, color: white)),
         //  Utils.setBGWithBorder(
         //     isPositive ? primaryLight : transparentColor,
         //     isPositive ? transparentColor : otherColor,
