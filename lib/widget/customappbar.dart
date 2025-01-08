@@ -59,7 +59,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              MyImage(width: 105, height: 165, imagePath: "youth_page.jfif"),
+              // MyImage(width: 105, height: 165, imagePath: "ic_appicon.png"),
+              Container(),
               Row(
                 children: [
                   InkWell(

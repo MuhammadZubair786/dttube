@@ -1392,7 +1392,7 @@ class _DetailState extends State<Detail> {
                       margin: const EdgeInsets.only(left: 20),
                       child: MyText(
                           color: white,
-                          text: "replay",
+                          text: "reply",
                           fontsize: Dimens.textTitle,
                           fontwaight: FontWeight.w500,
                           multilanguage: true,

@@ -129,7 +129,12 @@ class _UpdateState extends State<Update> {
   }
 
   Widget BuildHashtag() {
-    return ListView.builder(
+    return Consumer<HomeProvider>(builder: (context, categoryprovider, child) {
+      if (categoryprovider.categoryloading &&
+          !categoryprovider.categoryloadMore) {
+        return categoryShimmer2();
+      } else {
+        return  ListView.builder(
       itemCount: homeProvider.HashTag.length ?? 0,
       physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
@@ -156,8 +161,11 @@ class _UpdateState extends State<Update> {
           ),
         );
       },
-    );
-  }
+        );
+        }
+   
+      
+  });}
 
   Widget buildCategory() {
     return Consumer<HomeProvider>(builder: (context, categoryprovider, child) {
@@ -249,9 +257,27 @@ class _UpdateState extends State<Update> {
   }
 
   Widget categoryShimmer() {
-    return SizedBox(
+    return
+     SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 65,
+      child: ListView.builder(
+        itemCount: 5,
+        shrinkWrap: true,
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 15),
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return const CustomWidget.roundrectborder(height: 8, width: 90);
+        },
+      ),
+    );
+  }
+ Widget categoryShimmer2() {
+    return
+     SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 25,
       child: ListView.builder(
         itemCount: 5,
         shrinkWrap: true,

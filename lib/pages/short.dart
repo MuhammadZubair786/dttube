@@ -251,121 +251,45 @@ class ShortState extends State<Short> {
                   const SizedBox(width: 15),
                   GestureDetector(
                     onTap: (){
-                       showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  contentPadding: EdgeInsets.zero,  // Remove padding for a custom look
-                  content: Container(
-                    width: double.maxFinite,
-                    height: 160,  // Set appropriate height for your design
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      gradient: LinearGradient(
-                        colors: [Color.fromARGB(255, 247, 247, 247), Color.fromARGB(255, 247, 247, 247)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Header Text "Youth Community"
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'YOUTH CHANNELS',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.purple,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ),
-                        // Tab bar like design for "Channels" and "Sound Stream"
-                        Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                              onTap: (){
-                                Navigator.pop(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
-                              },
-                                child: Container(
-                                  color: Colors.redAccent,
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Center(
-                                    child: Text(
-                                      'CHANNELS',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                              onTap: (){
-                                Navigator.pop(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Music()));
-                              },
-                                child: Container(
-                                  color: Colors.greenAccent,
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Center(
-                                    child: Text(
-                                      'SOUND STREAM',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Floating action button (+ button) on the bottom right
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Container(
-                            height: 70,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();  // Close dialog on click
-                                },
-                                child: Icon(Icons.add,color:Colors.white),
-                                backgroundColor: Colors.black,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-                    },
+                     Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));                    },
                     child: Container(
-                      decoration: BoxDecoration(
-                      color:Color(0xffD400FF),
-                      border: Border.all(width: 1,color:Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                      ),
-                      padding: EdgeInsets.all(3),
-                      child: Text("Youth Channel",style: TextStyle(color:Colors.white),),
-                    ),
+                      width: 130,
+                      height: 30,
+    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+    decoration: BoxDecoration(
+      color: Colors.purple, // Adjust to match the exact color
+      borderRadius: BorderRadius.circular(30), // Rounded corners
+      boxShadow: [
+        BoxShadow(
+          color: Colors.red, // Outer red shadow
+          blurRadius: 15,
+          spreadRadius: 5,
+          offset: Offset(-5, 0), // Adjust for shadow positioning
+        ),
+        
+      ],
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        
+        Icon(
+        Icons.play_circle_fill,
+          color: Colors.green, // Adjust to match the icon color in your design
+          size: 30,
+        ),
+        SizedBox(width: 5),
+        Text(
+          'Youth +',
+          style: TextStyle(
+            color: Colors.white, // Text color
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  )
                   )
                   // InkWell(
                   //     onTap: () {
@@ -843,10 +767,13 @@ class ShortState extends State<Short> {
                               Expanded(
                                 child: MyText(
                                     color: white,
-                                    text: shortProvider
-                                            .shortVideoList?[index].channelName
-                                            .toString() ??
-                                        "",
+                                    text: (shortProvider.shortVideoList?[index].channelName?.toString() ?? "").contains('@channel')
+        ? (shortProvider.shortVideoList?[index].channelName?.toString() ?? "").replaceAll('@channel', '@youthpage')
+        : (shortProvider.shortVideoList?[index].channelName?.toString() ?? "") ,
+
+                                    // text: shortProvider.shortVideoList?[index].channelName
+                                    //         .toString() ??
+                                    //     "",
                                     multilanguage: false,
                                     textalign: TextAlign.left,
                                     fontsize: Dimens.textTitle,
@@ -854,6 +781,7 @@ class ShortState extends State<Short> {
                                     maxline: 1,
                                     fontwaight: FontWeight.w600,
                                     overflow: TextOverflow.ellipsis,
+                                    
                                     fontstyle: FontStyle.normal),
                               ),
                               const SizedBox(width: 10),
@@ -2260,17 +2188,17 @@ class ShortState extends State<Short> {
           maxHeight: MediaQuery.of(context).size.height,
         ),
         width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Row(
+                  children: [
+                    Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: MyText(
                         color: white,
@@ -2284,34 +2212,145 @@ class ShortState extends State<Short> {
                         textalign: TextAlign.start,
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(5),
-                      onTap: () {
-                        Navigator.pop(context);
-                        commentController.clear();
-                        shortProvider.clearComment();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        child: MyImage(
-                          width: 15,
-                          height: 15,
-                          imagePath: "ic_close.png",
-                          fit: BoxFit.contain,
-                          color: white,
+                    Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(5),
+                        onTap: () {
+                          Navigator.pop(context);
+                          commentController.clear();
+                          shortProvider.clearComment();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: MyImage(
+                            width: 15,
+                            height: 15,
+                            imagePath: "ic_close.png",
+                            fit: BoxFit.contain,
+                            color: white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Utils.buildGradLine(),
-            Expanded(
-              child: SingleChildScrollView(
+                Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                constraints: BoxConstraints(
+                  minHeight: 0,
+                  maxHeight: MediaQuery.of(context).size.height,
+                ),
+                alignment: Alignment.center,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: commentController,
+                          maxLines: 1,
+                          scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                          textAlign: TextAlign.start,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: transparent,
+                            border: InputBorder.none,
+                            hintText: "Add Comments",
+                            hintStyle: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.normal,
+                              color: white,
+                            ),
+                            contentPadding:
+                                const EdgeInsets.only(left: 10, right: 10),
+                          ),
+                          obscureText: false,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.normal,
+                            color: white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 3),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(5),
+                        onTap: () async {
+                          if (Constant.userID == null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const Login();
+                                },
+                              ),
+                            );
+                          } else if (commentController.text.isEmpty) {
+                            Utils().showToast("Please Enter Your Comment");
+                          } else {
+                            if (shortProvider.shortVideoList?[index].isComment ==
+                                    0 &&
+                                isShortType == "short") {
+                              Utils.showSnackbar(
+                                  context, "youcannotcommentthiscontent");
+                              Navigator.pop(context);
+                            } else {
+                              await shortProvider.getaddcomment(
+                                  index,
+                                  "3",
+                                  videoid,
+                                  "0",
+                                  commentController.text,
+                                  "0",
+                                  widget.shortType);
+          
+                              commentController.clear();
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: Consumer<ShortProvider>(
+                              builder: (context, commentprovider, child) {
+                                if (commentprovider.addcommentloading) {
+                                  return const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: colorAccent,
+                                      strokeWidth: 1,
+                                    ),
+                                  );
+                                } else {
+                                  return MyImage(
+                                    height: 15,
+                                    width: 15,
+                                    fit: BoxFit.contain,
+                                    imagePath: "ic_send.png",
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              ),
+          
+              Utils.buildGradLine(),
+              SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 controller: commentListController,
                 physics: const BouncingScrollPhysics(),
@@ -2382,12 +2421,8 @@ class ShortState extends State<Short> {
                                                 children: [
                                                   MyText(
                                                       color: white,
-                                                      text: commentprovider
-                                                              .commentList?[
-                                                                  index]
-                                                              .channelName
-                                                              .toString() ??
-                                                          "",
+                                                      text:  commentprovider.commentList?[index]?.channelName
+                          ?.replaceAll('@channel', '@youthpage') ?? '',
                                                       fontsize:
                                                           Dimens.textMedium,
                                                       fontwaight:
@@ -2445,10 +2480,10 @@ class ShortState extends State<Short> {
                                                           // Set Replay Comment Channal name
                                                           commentController
                                                               .clear();
-
+                        
                                                           Navigator.pop(
                                                               context);
-
+                        
                                                           replayCommentBottomSheet(
                                                               index,
                                                               videoid,
@@ -2477,7 +2512,7 @@ class ShortState extends State<Short> {
                                                                       .toString() ??
                                                                   "",
                                                               isShortType);
-
+                        
                                                           await shortProvider
                                                               .getReplayComment(
                                                                   commentprovider
@@ -2694,121 +2729,9 @@ class ShortState extends State<Short> {
                   ],
                 ),
               ),
-            ),
-            Utils.buildGradLine(),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              constraints: BoxConstraints(
-                minHeight: 0,
-                maxHeight: MediaQuery.of(context).size.height,
-              ),
-              alignment: Alignment.center,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: commentController,
-                        maxLines: 1,
-                        scrollPhysics: const AlwaysScrollableScrollPhysics(),
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: transparent,
-                          border: InputBorder.none,
-                          hintText: "Add Comments",
-                          hintStyle: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.normal,
-                            color: white,
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 10, right: 10),
-                        ),
-                        obscureText: false,
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.normal,
-                          color: white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 3),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(5),
-                      onTap: () async {
-                        if (Constant.userID == null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const Login();
-                              },
-                            ),
-                          );
-                        } else if (commentController.text.isEmpty) {
-                          Utils().showToast("Please Enter Your Comment");
-                        } else {
-                          if (shortProvider.shortVideoList?[index].isComment ==
-                                  0 &&
-                              isShortType == "short") {
-                            Utils.showSnackbar(
-                                context, "youcannotcommentthiscontent");
-                            Navigator.pop(context);
-                          } else {
-                            await shortProvider.getaddcomment(
-                                index,
-                                "3",
-                                videoid,
-                                "0",
-                                commentController.text,
-                                "0",
-                                widget.shortType);
-
-                            commentController.clear();
-                          }
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: Consumer<ShortProvider>(
-                            builder: (context, commentprovider, child) {
-                              if (commentprovider.addcommentloading) {
-                                return const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: colorAccent,
-                                    strokeWidth: 1,
-                                  ),
-                                );
-                              } else {
-                                return MyImage(
-                                  height: 15,
-                                  width: 15,
-                                  fit: BoxFit.contain,
-                                  imagePath: "ic_send.png",
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                  ],
-                ),
-              ),
-            ),
-          ],
+              Utils.buildGradLine(),
+                      ],
+          ),
         ),
       ),
     );
@@ -2887,111 +2810,115 @@ class ShortState extends State<Short> {
       builder: (context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(15),
-            alignment: Alignment.center,
-            height: MediaQuery.of(context).size.height * 0.50,
-            decoration: BoxDecoration(
-              color: colorPrimaryDark,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 35,
-                  alignment: Alignment.centerLeft,
-                  child: MyText(
-                      color: white,
-                      text: "Select Report Reason",
-                      textalign: TextAlign.left,
-                      fontsize: Dimens.textBig,
-                      multilanguage: false,
-                      inter: false,
-                      maxline: 2,
-                      fontwaight: FontWeight.w600,
-                      overflow: TextOverflow.ellipsis,
-                      fontstyle: FontStyle.normal),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: buildReportReasonList(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        shortProvider.reportReasonList?.clear();
-                        shortProvider.repostposition = 0;
-                        shortProvider.clearSelectReportReason();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(width: 1, color: white),
-                        ),
-                        child: MyText(
-                            color: white,
-                            text: "cancel",
-                            textalign: TextAlign.left,
-                            fontsize: Dimens.textBig,
-                            multilanguage: true,
-                            inter: false,
-                            maxline: 2,
-                            fontwaight: FontWeight.w700,
-                            overflow: TextOverflow.ellipsis,
-                            fontstyle: FontStyle.normal),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    InkWell(
-                      onTap: () async {
-                        if (shortProvider.reasonId == "" ||
-                            shortProvider.reasonId.isEmpty) {
-                          Utils.showSnackbar(
-                              context, "pleaseselectyourreportreason");
-                        } else {
-                          await shortProvider.addContentReport(
-                              reportUserid,
-                              contentid,
-                              shortProvider
-                                      .reportReasonList?[
-                                          shortProvider.repostposition ?? 0]
-                                      .reason
-                                      .toString() ??
-                                  "",
-                              "1");
-                          if (!mounted) return;
+          return SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              height: MediaQuery.of(context).size.height * 0.50,
+              decoration: BoxDecoration(
+                color: colorPrimaryDark,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 35,
+                    alignment: Alignment.centerLeft,
+                    child: MyText(
+                        color: white,
+                        text: "Select Report Reason",
+                        textalign: TextAlign.left,
+                        fontsize: Dimens.textBig,
+                        multilanguage: false,
+                        inter: false,
+                        maxline: 2,
+                        fontwaight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis,
+                        fontstyle: FontStyle.normal),
+                  ),
+                  const SizedBox(height: 10),
+                 SingleChildScrollView(
+                   child: Container(
+                    height: 180,
+                                 child: buildReportReasonList(),),
+                 ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
                           Navigator.pop(context);
-                          Utils.showSnackbar(context, "reportaddsuccsessfully");
+                          shortProvider.reportReasonList?.clear();
+                          shortProvider.repostposition = 0;
                           shortProvider.clearSelectReportReason();
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                        decoration: BoxDecoration(
-                            color: colorAccent,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: MyText(
-                            color: white,
-                            text: "report",
-                            textalign: TextAlign.left,
-                            fontsize: Dimens.textBig,
-                            multilanguage: true,
-                            inter: false,
-                            maxline: 2,
-                            fontwaight: FontWeight.w700,
-                            overflow: TextOverflow.ellipsis,
-                            fontstyle: FontStyle.normal),
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(width: 1, color: white),
+                          ),
+                          child: MyText(
+                              color: white,
+                              text: "cancel",
+                              textalign: TextAlign.left,
+                              fontsize: Dimens.textBig,
+                              multilanguage: true,
+                              inter: false,
+                              maxline: 2,
+                              fontwaight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis,
+                              fontstyle: FontStyle.normal),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 20),
+                      InkWell(
+                        onTap: () async {
+                          if (shortProvider.reasonId == "" ||
+                              shortProvider.reasonId.isEmpty) {
+                            Utils.showSnackbar(
+                                context, "pleaseselectyourreportreason");
+                          } else {
+                            await shortProvider.addContentReport(
+                                reportUserid,
+                                contentid,
+                                shortProvider
+                                        .reportReasonList?[
+                                            shortProvider.repostposition ?? 0]
+                                        .reason
+                                        .toString() ??
+                                    "",
+                                "1");
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                            Utils.showSnackbar(context, "reportaddsuccsessfully");
+                            shortProvider.clearSelectReportReason();
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          decoration: BoxDecoration(
+                              color: colorAccent,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: MyText(
+                              color: white,
+                              text: "report",
+                              textalign: TextAlign.left,
+                              fontsize: Dimens.textBig,
+                              multilanguage: true,
+                              inter: false,
+                              maxline: 2,
+                              fontwaight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis,
+                              fontstyle: FontStyle.normal),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         });
@@ -3035,64 +2962,69 @@ class ShortState extends State<Short> {
     if (shortProvider.getRepostReasonModel.status == 200 &&
         shortProvider.reportReasonList != null) {
       if ((shortProvider.reportReasonList?.length ?? 0) > 0) {
-        return ListView.builder(
-          scrollDirection: Axis.vertical,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: shortProvider.reportReasonList?.length ?? 0,
-          itemBuilder: (BuildContext ctx, index) {
-            return InkWell(
-              onTap: () {
-                shortProvider.selectReportReason(index, true,
-                    shortProvider.reportReasonList?[index].id.toString() ?? "");
-              },
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                color: shortProvider.repostposition == index &&
-                        shortProvider.isSelectReason == true
-                    ? colorAccent
-                    : colorPrimaryDark,
-                height: 45,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    MyText(
-                        color: white,
-                        text: "${(index + 1).toString()}.",
-                        textalign: TextAlign.left,
-                        fontsize: Dimens.textTitle,
-                        multilanguage: false,
-                        inter: false,
-                        maxline: 2,
-                        fontwaight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                        fontstyle: FontStyle.normal),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: MyText(
-                          color: white,
-                          text: shortProvider.reportReasonList?[index].reason
-                                  .toString() ??
-                              "",
-                          textalign: TextAlign.left,
-                          fontsize: Dimens.textTitle,
-                          multilanguage: false,
-                          inter: false,
-                          maxline: 1,
-                          fontwaight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                          fontstyle: FontStyle.normal),
-                    ),
-                    const SizedBox(width: 20),
-                    shortProvider.repostposition == index &&
+        return Container(
+          child: SingleChildScrollView(
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: shortProvider.reportReasonList?.length ?? 0,
+              itemBuilder: (BuildContext ctx, index) {
+                return InkWell(
+                  onTap: () {
+                    shortProvider.selectReportReason(index, true,
+                        shortProvider.reportReasonList?[index].id.toString() ?? "");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    color: shortProvider.repostposition == index &&
                             shortProvider.isSelectReason == true
-                        ? MyImage(width: 18, height: 18, imagePath: "true.png")
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-              ),
-            );
-          },
+                        ? colorAccent
+                        : colorPrimaryDark,
+                    height: 45,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        MyText(
+                            color: white,
+                            text: "${(index + 1).toString()}.",
+                            textalign: TextAlign.left,
+                            fontsize: Dimens.textTitle,
+                            multilanguage: false,
+                            inter: false,
+                            maxline: 2,
+                            fontwaight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis,
+                            fontstyle: FontStyle.normal),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: MyText(
+                              color: white,
+                              text: shortProvider.reportReasonList?[index].reason
+                                      .toString() ??
+                                  "",
+                              textalign: TextAlign.left,
+                              fontsize: Dimens.textTitle,
+                              multilanguage: false,
+                              inter: false,
+                              maxline: 1,
+                              fontwaight: FontWeight.w400,
+                              overflow: TextOverflow.ellipsis,
+                              fontstyle: FontStyle.normal),
+                        ),
+                        const SizedBox(width: 20),
+                        shortProvider.repostposition == index &&
+                                shortProvider.isSelectReason == true
+                            ? MyImage(width: 18, height: 18, imagePath: "true.png")
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         );
       } else {
         debugPrint("null Array");
@@ -3354,7 +3286,7 @@ class ShortState extends State<Short> {
                       margin: const EdgeInsets.only(left: 20),
                       child: MyText(
                           color: white,
-                          text: "replay",
+                          text: "reply",
                           fontsize: Dimens.textTitle,
                           fontwaight: FontWeight.w500,
                           multilanguage: true,
@@ -3469,7 +3401,7 @@ class ShortState extends State<Short> {
                           filled: true,
                           fillColor: transparent,
                           border: InputBorder.none,
-                          hintText: "Replay Comments",
+                          hintText: "Reply Comments",
                           hintStyle: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

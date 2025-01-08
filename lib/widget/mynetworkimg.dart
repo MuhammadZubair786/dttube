@@ -42,8 +42,8 @@ class MyNetworkImage extends StatelessWidget {
             width: width ?? 0,
             height: height ?? 0,
             imagePath: islandscap == false || islandscap == null
-                ? "no_image_port.png"
-                : "no_image_land.png",
+                ? "ic_appicon.png"
+                : "ic_appicon.png",
             fit: BoxFit.cover,
           );
         },
@@ -52,8 +52,8 @@ class MyNetworkImage extends StatelessWidget {
             width: width ?? 0,
             height: height ?? 0,
             imagePath: islandscap == false || islandscap == null
-                ? "no_image_port.png"
-                : "no_image_land.png",
+                ? "ic_appicon.png"
+                : "ic_appicon.png",
             fit: BoxFit.cover,
           );
         },

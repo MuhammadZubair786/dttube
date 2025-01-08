@@ -1,7 +1,7 @@
 class Constant {
   final String baseurl = "https://youthpagenetwork.online/admin/public/api/";
   static String appName = "YouthPage";
-  static String appPackageName = "com.divinetechs.dttube";
+  static String appPackageName = "com.YouthPage";
   static String appleAppId = "6451370598";
   /* OneSignal App ID keyId*/
   static String? oneSignalAppId;

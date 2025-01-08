@@ -29,7 +29,7 @@ class MyImage extends StatelessWidget {
       fit: fit,
       errorBuilder: (context, url, error) {
         return Image.asset(
-          "assets/images/youth_page.jfif",
+          "assets/images/ic_appicon.png",
           width: width,
           height: height,
           fit: BoxFit.cover,

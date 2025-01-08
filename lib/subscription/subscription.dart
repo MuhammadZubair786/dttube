@@ -11,6 +11,8 @@ import 'package:dttube/utils/sharedpre.dart';
 import 'package:dttube/utils/utils.dart';
 import 'package:dttube/widget/myimage.dart';
 import 'package:dttube/widget/mytext.dart';
+import 'package:dttube/widget/mytextnoshadow.dart';
+
 import 'package:dttube/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -258,7 +260,7 @@ class SubscriptionState extends State<Subscription> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: MyText(
+                            child: MyTextNoShadow(
                               color: (packageList[index].isBuy == 1
                                   ? white
                                   : colorAccent),
@@ -273,7 +275,7 @@ class SubscriptionState extends State<Subscription> {
                             ),
                           ),
                           const SizedBox(width: 5),
-                          MyText(
+                          MyTextNoShadow(
                             color: white,
                             text:
                                 "${Constant.currencySymbol} ${packageList[index].price.toString()} / ${packageList[index].time.toString()} ${packageList[index].type.toString()}",
@@ -324,7 +326,7 @@ class SubscriptionState extends State<Subscription> {
                           alignment: Alignment.center,
                           child: Consumer<SubscriptionProvider>(
                             builder: (context, subscriptionProvider, child) {
-                              return MyText(
+                              return MyTextNoShadow(
                                 color: black,
                                 text: (packageList[index].isBuy == 1)
                                     ? "current"
@@ -389,7 +391,7 @@ class SubscriptionState extends State<Subscription> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: MyText(
+                            child: MyTextNoShadow(
                               color: (packageList[index].isBuy == 1
                                   ? black
                                   : colorPrimary),
@@ -404,7 +406,7 @@ class SubscriptionState extends State<Subscription> {
                             ),
                           ),
                           const SizedBox(width: 5),
-                          MyText(
+                          MyTextNoShadow(
                             color: (packageList[index].isBuy == 1
                                 ? black
                                 : colorPrimary),
@@ -458,7 +460,7 @@ class SubscriptionState extends State<Subscription> {
                             alignment: Alignment.center,
                             child: Consumer<SubscriptionProvider>(
                               builder: (context, subscriptionProvider, child) {
-                                return MyText(
+                                return MyTextNoShadow(
                                   color: white,
                                   text: (packageList[index].isBuy == 1)
                                       ? "current"
@@ -509,7 +511,7 @@ class SubscriptionState extends State<Subscription> {
             child: Row(
               children: [
                 Expanded(
-                  child: MyText(
+                  child: MyTextNoShadow(
                     color: (packageList?[index ?? 0].isBuy == 1
                         ? black
                         : colorAccent),
@@ -554,7 +556,7 @@ class SubscriptionState extends State<Subscription> {
                             ? "true.png"
                             : "cross_mark.png",
                       )
-                    : MyText(
+                    : MyTextNoShadow(
                         color: white,
                         text: packageList?[index ?? 0]
                                 .data?[position]
