@@ -43,16 +43,11 @@ import 'provider/shortprovider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Just Audio Player Background Service Set
   if (Constant.isBuy != null ||
       Constant.isBuy != "0" ||
       Constant.userID != null ||
       Constant.isBuy == "1") {
-    // await JustAudioBackground.init(
-    //   androidNotificationChannelId: Constant.appPackageName,
-    //   androidNotificationChannelName: Constant.appName,
-    //   androidNotificationOngoing: true,
-    // );
+  
   }
 
   await Firebase.initializeApp();

@@ -14,11 +14,13 @@ import 'package:dttube/widget/mytext.dart';
 import 'package:dttube/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pay_with_paystack/pay_with_paystack.dart';
 import 'package:payu_checkoutpro_flutter/PayUConstantKeys.dart';
 import 'package:payu_checkoutpro_flutter/payu_checkoutpro_flutter.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
@@ -146,6 +148,123 @@ class AllPaymentState extends State<AllPayment>
     });
   }
 
+
+
+void _showPaystackDetailsDialog(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    String selectedCurrency = "GHS";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Enter Payment Details",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Currency Dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedCurrency,
+                  decoration: InputDecoration(
+                    labelText: "Currency",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  items: ["GHS", "NGN", "USD"]
+                      .map((currency) => DropdownMenuItem(
+                            value: currency,
+                            child: Text(currency),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    selectedCurrency = value!;
+                  },
+                ),
+                SizedBox(height: 16),
+
+                // Email Input
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    prefixIcon: Icon(Icons.email),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                _processPaystackPayment(
+                  context,
+                  emailController.text,
+                  selectedCurrency,
+                );
+              },
+              child: Text("Proceed to Pay"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _processPaystackPayment(
+      BuildContext context, String email, String currency) {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email is required")));
+      return;
+    }
+
+    var uuid = Uuid();
+    final uniqueTransRef = uuid.v4();
+
+    PayWithPayStack().now(
+      context: context,
+      secretKey: "sk_test_e3f5183a6c6215a055f53ed9582e95c6c12751e2",
+      customerEmail: email,
+      reference: uniqueTransRef,
+      currency: currency,
+
+      amount: "20000", // Amount in smallest unit (e.g., 20000 kobo = 200 GHS)
+      callbackUrl: "https://google.com",
+      transactionCompleted: () {
+        debugPrint("Transaction completed!");
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Transaction completed successfully!")),
+        );
+      },
+      transactionNotCompleted: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Transaction was not completed.")),
+        );
+      },
+    );
+  }
+
+
+  
   @override
   void dispose() {
     subscriptionProvider.clearProvider();
@@ -493,28 +612,54 @@ class AllPaymentState extends State<AllPayment>
             fontstyle: FontStyle.normal,
           ),
           const SizedBox(height: 5),
-          MyText(
-            color: white,
-            text: "choose_a_payment_methods_to_pay",
-            multilanguage: true,
-            fontsize: Dimens.textMedium,
-            maxline: 2,
-            overflow: TextOverflow.ellipsis,
-            fontwaight: FontWeight.w500,
-            textalign: TextAlign.center,
-            fontstyle: FontStyle.normal,
-          ),
+          // MyText(
+          //   color: white,
+          //   text: "choose_a_payment_methods_to_pay",
+          //   multilanguage: true,
+          //   fontsize: Dimens.textMedium,
+          //   maxline: 2,
+          //   overflow: TextOverflow.ellipsis,
+          //   fontwaight: FontWeight.w500,
+          //   textalign: TextAlign.center,
+          //   fontstyle: FontStyle.normal,
+          // ),
           const SizedBox(height: 15),
-          MyText(
-            color: white,
-            text: "pay_with",
-            multilanguage: true,
-            fontsize: Dimens.textTitle,
-            maxline: 1,
-            overflow: TextOverflow.ellipsis,
-            fontwaight: FontWeight.w700,
-            textalign: TextAlign.center,
-            fontstyle: FontStyle.normal,
+          GestureDetector(
+            onTap: (){
+              _showPaystackDetailsDialog(context);
+            },
+            child: Container(
+              color: Colors.pink,
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyText(
+                    color: white,
+                    text: "pay_with",
+                    multilanguage: true,
+                    fontsize: Dimens.textTitle,
+                    maxline: 1,
+                    overflow: TextOverflow.ellipsis,
+                    fontwaight: FontWeight.w700,
+                    textalign: TextAlign.center,
+                    fontstyle: FontStyle.normal,
+                  ),
+                  Text(" Paystack",style:TextStyle(color: Colors.white,fontWeight: FontWeight.w700)),
+                  //    MyText(
+                  //   color: white,
+                  //   text: " Paystack",
+                  //   multilanguage: true,
+                  //   fontsize: Dimens.textTitle,
+                  //   maxline: 1,
+                  //   overflow: TextOverflow.ellipsis,
+                  //   fontwaight: FontWeight.w700,
+                  //   textalign: TextAlign.center,
+                  //   fontstyle: FontStyle.normal,
+                  // ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 20),
 

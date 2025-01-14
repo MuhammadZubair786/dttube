@@ -26,7 +26,9 @@ import 'package:dttube/utils/color.dart';
 import 'package:dttube/widget/myimage.dart';
 import 'package:dttube/widget/mytext.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pay_with_paystack/pay_with_paystack.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -162,6 +164,36 @@ class _SettingState extends State<Setting> {
                 }
               });
             }),
+            TextButton(
+                onPressed: () {
+                  _showPaymentMethodDialog(context);
+                  // var uuid = Uuid();
+                  // final uniqueTransRef = uuid.v4();
+
+                  // PayWithPayStack().now(
+                  //   context: context,
+                  //   secretKey:
+                  //       "sk_test_e3f5183a6c6215a055f53ed9582e95c6c12751e2",
+                  //   customerEmail: "popekabu@gmail.com",
+                  //   reference: uniqueTransRef,
+                  //   currency: "GHS",
+                  //   amount:
+                  //       "20000", // Amount in smallest unit (e.g., 20000 kobo = 200 GHS)
+                  //   callbackUrl: "https://google.com",
+                  //   transactionCompleted: () {
+                  //     // Handle transaction completion
+                  //     debugPrint("Transaction completed successfully!");
+                  //   },
+                  //   transactionNotCompleted: () {
+                  //     // Handle transaction failure
+                  //     debugPrint("Transaction was not completed.");
+                  //   },
+                  // );
+                },
+                child: const Text(
+                  "Pay With PayStack",
+                  style: TextStyle(fontSize: 23),
+                )),
             /* Notification Page */
             settingItem("notification.png", "notification", false, () {
               AdHelper.showFullscreenAd(context, Constant.interstialAdType, () {
@@ -299,7 +331,8 @@ class _SettingState extends State<Setting> {
             /* Get Pages Api*/
             buildPages(),
             /* UserPanel Dilog Sheet */
-            Consumer<SettingProvider>(builder: (context, profileprovider, child) {
+            Consumer<SettingProvider>(
+                builder: (context, profileprovider, child) {
               if (Constant.userID == null) {
                 return const SizedBox.shrink();
               } else {
@@ -308,7 +341,9 @@ class _SettingState extends State<Setting> {
                 } else {
                   return settingItem("userpanel.png", "userpanel", false, () {
                     debugPrint("userpanal==>${Constant.userPanelStatus}");
-                    if (Constant.userPanelStatus == "0" || Constant.userPanelStatus == "" || Constant.userPanelStatus == null) {
+                    if (Constant.userPanelStatus == "0" ||
+                        Constant.userPanelStatus == "" ||
+                        Constant.userPanelStatus == null) {
                       userPanelActiveDilog();
                     } else {
                       edituserPanelDilog();
@@ -322,8 +357,12 @@ class _SettingState extends State<Setting> {
               _languageChangeDialog();
             }),
             /* Login Logout */
-            settingItem("ic_logout.png", Constant.userID != null ? "logout" : "login", false, () {
-              Constant.userID != null ? logoutConfirmDialog() : Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
+            settingItem("ic_logout.png",
+                Constant.userID != null ? "logout" : "login", false, () {
+              Constant.userID != null
+                  ? logoutConfirmDialog()
+                  : Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login()));
             }),
 
             Utils.miniPlayerSpace(),
@@ -334,30 +373,50 @@ class _SettingState extends State<Setting> {
   }
 
   Widget buildPages() {
-    return Consumer<SettingProvider>(builder: (context, settingprovider, child) {
+    return Consumer<SettingProvider>(
+        builder: (context, settingprovider, child) {
       return ListView.builder(
           itemCount: settingprovider.getpagesModel.result?.length ?? 0,
           scrollDirection: Axis.vertical,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-            return settingItem(settingprovider.getpagesModel.result?[index].icon.toString() ?? "",
-                settingprovider.getpagesModel.result?[index].title.toString() ?? "", true, () {
+            return settingItem(
+                settingprovider.getpagesModel.result?[index].icon.toString() ??
+                    "",
+                settingprovider.getpagesModel.result?[index].title.toString() ??
+                    "",
+                true, () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
                     return Commonpage(
-                      title: settingprovider.getpagesModel.result?[index].title.toString() ?? "",
-                      url: settingprovider.getpagesModel.result?[index].title.toString() == "Youth Page Website"
+                      title: settingprovider.getpagesModel.result?[index].title
+                              .toString() ??
+                          "",
+                      url: settingprovider.getpagesModel.result?[index].title
+                                  .toString() ==
+                              "Youth Page Website"
                           ? "https://youthpagenetwork.online/"
-                          : settingprovider.getpagesModel.result?[index].title.toString() == "Be Youth page investor"
+                          : settingprovider.getpagesModel.result?[index].title
+                                      .toString() ==
+                                  "Be Youth page investor"
                               ? "https://youthpagenetwork.online/investor.html"
-                              : settingprovider.getpagesModel.result?[index].title.toString() == "Work From Home"
+                              : settingprovider
+                                          .getpagesModel.result?[index].title
+                                          .toString() ==
+                                      "Work From Home"
                                   ? "https://youthpagenetwork.online/service.html"
-                                  : settingprovider.getpagesModel.result?[index].title.toString() == "Contact Adminstrator"
+                                  : settingprovider.getpagesModel.result?[index]
+                                              .title
+                                              .toString() ==
+                                          "Contact Adminstrator"
                                       ? "https://youthpagenetwork.online/contact.html"
-                                      : settingprovider.getpagesModel.result?[index].url.toString() ?? "",
+                                      : settingprovider
+                                              .getpagesModel.result?[index].url
+                                              .toString() ??
+                                          "",
                     );
                   },
                 ),
@@ -381,7 +440,8 @@ class _SettingState extends State<Setting> {
                 ? MyNetworkImage(
                     width: 30,
                     height: 30,
-                    imagePath: imagepath == "https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png"
+                    imagePath: imagepath ==
+                            "https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png"
                         ? "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
                         : imagepath,
                     color: white,
@@ -391,7 +451,8 @@ class _SettingState extends State<Setting> {
                 : MyImage(
                     width: 30,
                     height: 30,
-                    imagePath: imagepath == "https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png"
+                    imagePath: imagepath ==
+                            "https://youthpagenetwork.online/admin/public/assets/imgs/no_img.png"
                         ? "https://i.ibb.co/pnndVKv/image-removebg-preview.png"
                         : imagepath,
                     color: white,
@@ -448,7 +509,8 @@ class _SettingState extends State<Setting> {
         return Dialog(
           backgroundColor: colorPrimaryDark,
           insetAnimationCurve: Curves.bounceInOut,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
           insetPadding: const EdgeInsets.all(10),
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -458,7 +520,8 @@ class _SettingState extends State<Setting> {
             decoration: BoxDecoration(
               color: colorAccent.withOpacity(0.10),
             ),
-            child: Consumer<SettingProvider>(builder: (context, settingprovider, child) {
+            child: Consumer<SettingProvider>(
+                builder: (context, settingprovider, child) {
               return Column(
                 children: [
                   MyText(
@@ -479,19 +542,23 @@ class _SettingState extends State<Setting> {
                     controller: passwordController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    style: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, white, FontWeight.w500),
+                    style: Utils.googleFontStyle(1, Dimens.textBig,
+                        FontStyle.normal, white, FontWeight.w500),
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         icon: Icon(
                           color: white,
-                          settingprovider.isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          settingprovider.isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           settingprovider.passwordHideShow();
                         },
                       ),
                       hintText: "Give your User Panel Password",
-                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, gray, FontWeight.w500),
+                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig,
+                          FontStyle.normal, gray, FontWeight.w500),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: gray),
                       ),
@@ -537,7 +604,10 @@ class _SettingState extends State<Setting> {
                           height: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: settingprovider.isUserpanelType == "on" && settingprovider.isActive == true ? colorAccent : colorPrimaryDark,
+                              color: settingprovider.isUserpanelType == "on" &&
+                                      settingprovider.isActive == true
+                                  ? colorAccent
+                                  : colorPrimaryDark,
                               shape: BoxShape.circle),
                           child: MyText(
                               color: white,
@@ -563,7 +633,10 @@ class _SettingState extends State<Setting> {
                           height: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: settingprovider.isUserpanelType == "off" && settingprovider.isActive == true ? colorAccent : colorPrimaryDark,
+                              color: settingprovider.isUserpanelType == "off" &&
+                                      settingprovider.isActive == true
+                                  ? colorAccent
+                                  : colorPrimaryDark,
                               shape: BoxShape.circle),
                           child: MyText(
                               color: white,
@@ -624,19 +697,26 @@ class _SettingState extends State<Setting> {
                         child: InkWell(
                           onTap: () async {
                             if (passwordController.text.isEmpty) {
-                              Utils.showSnackbar(context, "pleaseenteryourpassword");
+                              Utils.showSnackbar(
+                                  context, "pleaseenteryourpassword");
                             } else if (passwordController.text.length != 6) {
-                              Utils.showSnackbar(context, "passwordmustbesixcharecter");
-                            } else if (settingprovider.isUserpanelType == "off") {
-                              Utils.showSnackbar(context, "pleaseselectuserpanelstatus");
+                              Utils.showSnackbar(
+                                  context, "passwordmustbesixcharecter");
+                            } else if (settingprovider.isUserpanelType ==
+                                "off") {
+                              Utils.showSnackbar(
+                                  context, "pleaseselectuserpanelstatus");
                             } else {
                               /* Userpanal Api */
-                              await settingProvider.getActiveUserPanel(passwordController.text, settingprovider.isActiveType);
+                              await settingProvider.getActiveUserPanel(
+                                  passwordController.text,
+                                  settingprovider.isActiveType);
                               if (!mounted) return;
                               Navigator.pop(context);
                               settingprovider.clearUserPanel();
                               passwordController.clear();
-                              Utils.showSnackbar(context, "userpanalactivesuccsessfully");
+                              Utils.showSnackbar(
+                                  context, "userpanalactivesuccsessfully");
                             }
                           },
                           child: Container(
@@ -685,7 +765,8 @@ class _SettingState extends State<Setting> {
         return Dialog(
           backgroundColor: colorPrimaryDark,
           insetAnimationCurve: Curves.bounceInOut,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
           insetPadding: const EdgeInsets.all(10),
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -695,7 +776,8 @@ class _SettingState extends State<Setting> {
             decoration: BoxDecoration(
               color: colorAccent.withOpacity(0.10),
             ),
-            child: Consumer<SettingProvider>(builder: (context, settingprovider, child) {
+            child: Consumer<SettingProvider>(
+                builder: (context, settingprovider, child) {
               return Column(
                 children: [
                   MyText(
@@ -716,19 +798,23 @@ class _SettingState extends State<Setting> {
                     controller: passwordController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    style: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, white, FontWeight.w500),
+                    style: Utils.googleFontStyle(1, Dimens.textBig,
+                        FontStyle.normal, white, FontWeight.w500),
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         icon: Icon(
                           color: white,
-                          settingprovider.isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          settingprovider.isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           settingprovider.passwordHideShow();
                         },
                       ),
                       hintText: "Give your User Panel Password",
-                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig, FontStyle.normal, gray, FontWeight.w500),
+                      hintStyle: Utils.googleFontStyle(1, Dimens.textBig,
+                          FontStyle.normal, gray, FontWeight.w500),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: gray),
                       ),
@@ -780,16 +866,20 @@ class _SettingState extends State<Setting> {
                         child: InkWell(
                           onTap: () async {
                             if (passwordController.text.isEmpty) {
-                              Utils.showSnackbar(context, "pleaseenteryourpassword");
+                              Utils.showSnackbar(
+                                  context, "pleaseenteryourpassword");
                             } else if (passwordController.text.length != 6) {
-                              Utils.showSnackbar(context, "passwordmustbesixcharecter");
+                              Utils.showSnackbar(
+                                  context, "passwordmustbesixcharecter");
                             } else {
                               /* Userpanal Api */
-                              await settingProvider.getActiveUserPanel(passwordController.text, "1");
+                              await settingProvider.getActiveUserPanel(
+                                  passwordController.text, "1");
                               if (!mounted) return;
                               Navigator.pop(context);
                               passwordController.clear();
-                              Utils.showSnackbar(context, "passwordchangesuccsessfully");
+                              Utils.showSnackbar(
+                                  context, "passwordchangesuccsessfully");
                             }
                           },
                           child: Container(
@@ -1153,7 +1243,9 @@ class _SettingState extends State<Setting> {
                           isPositive: true,
                           isMultilang: true,
                           onClick: () async {
-                            final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+                            final profileProvider =
+                                Provider.of<ProfileProvider>(context,
+                                    listen: false);
                             await settingProvider.getLogout();
                             await profileProvider.clearProvider();
                             // Firebase Signout
@@ -1203,7 +1295,9 @@ class _SettingState extends State<Setting> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: isPositive ? colorAccent : transparent, borderRadius: BorderRadius.circular(5), border: Border.all(width: 0.5, color: white)),
+            color: isPositive ? colorAccent : transparent,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(width: 0.5, color: white)),
         //  Utils.setBGWithBorder(
         //     isPositive ? primaryLight : transparentColor,
         //     isPositive ? transparentColor : otherColor,
@@ -1221,6 +1315,177 @@ class _SettingState extends State<Setting> {
           fontstyle: FontStyle.normal,
         ),
       ),
+    );
+  }
+
+  void _showPaymentMethodDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Select Payment Method",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  leading: Icon(Icons.payment, color: Colors.blue),
+                  title: Text("Paystack"),
+                  onTap: () {
+                    Navigator.pop(context); // Close the dialog
+                    _showPaystackDetailsDialog(context); // Show next dialog
+                  },
+                ),
+              ),
+              SizedBox(height: 8),
+              Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  leading: Icon(Icons.credit_card, color: Colors.green),
+                  title: Text("Skrill"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Other payment method selected"),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showPaystackDetailsDialog(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    String selectedCurrency = "GHS";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Enter Payment Details",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Currency Dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedCurrency,
+                  decoration: InputDecoration(
+                    labelText: "Currency",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  items: ["GHS", "NGN", "USD"]
+                      .map((currency) => DropdownMenuItem(
+                            value: currency,
+                            child: Text(currency),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    selectedCurrency = value!;
+                  },
+                ),
+                SizedBox(height: 16),
+
+                // Email Input
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    prefixIcon: Icon(Icons.email),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                _processPaystackPayment(
+                  context,
+                  emailController.text,
+                  selectedCurrency,
+                );
+              },
+              child: Text("Proceed to Pay"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _processPaystackPayment(
+      BuildContext context, String email, String currency) {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email is required")));
+      return;
+    }
+
+    var uuid = Uuid();
+    final uniqueTransRef = uuid.v4();
+
+    PayWithPayStack().now(
+      context: context,
+      secretKey: "sk_test_e3f5183a6c6215a055f53ed9582e95c6c12751e2",
+      customerEmail: email,
+      reference: uniqueTransRef,
+      currency: currency,
+
+      amount: "20000", // Amount in smallest unit (e.g., 20000 kobo = 200 GHS)
+      callbackUrl: "https://google.com",
+      transactionCompleted: () {
+        debugPrint("Transaction completed!");
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Transaction completed successfully!")),
+        );
+      },
+      transactionNotCompleted: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Transaction was not completed.")),
+        );
+      },
     );
   }
 }
