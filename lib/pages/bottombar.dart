@@ -103,7 +103,7 @@ class BottombarState extends State<Bottombar> {
       hashtagId: '',
       hashtagName: '',
     ),
-    ChatListScreen(),
+    // ChatListScreen(),
     const Setting(),
   ];
 
@@ -253,17 +253,17 @@ class BottombarState extends State<Bottombar> {
                     // ),
                     ),
               ),
-              BottomNavigationBarItem(
-                backgroundColor: colorPrimary,
-                label: "Chat",
-                activeIcon: RadiantGradientMask(
-                    child: Icon(
-                  Icons.chat,
-                  color: Colors.red,
-                  size: 40,
-                )),
-                icon: Align(alignment: Alignment.center, child: Icon(Icons.chat)),
-              ),
+              // BottomNavigationBarItem(
+              //   backgroundColor: colorPrimary,
+              //   label: "Chat",
+              //   activeIcon: RadiantGradientMask(
+              //       child: Icon(
+              //     Icons.chat,
+              //     color: Colors.red,
+              //     size: 40,
+              //   )),
+              //   icon: Align(alignment: Alignment.center, child: Icon(Icons.chat)),
+              // ),
               BottomNavigationBarItem(
                 backgroundColor: colorPrimary,
                 label: "Setting",

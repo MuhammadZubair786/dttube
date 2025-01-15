@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dttube/pages/detail.dart';
 import 'package:dttube/pages/login.dart';
+import 'package:dttube/pages/setting.dart';
 import 'package:dttube/provider/homeprovider.dart';
 import 'package:dttube/utils/constant.dart';
 import 'package:dttube/utils/customwidget.dart';
+import 'package:dttube/webservice/apiservice.dart';
 import 'package:dttube/widget/mynetworkimg.dart';
 import 'package:dttube/widget/customappbar.dart';
 import 'package:dttube/widget/nodata.dart';
@@ -112,6 +114,7 @@ class _HomeState extends State<Home> {
 /* First Time Open Page Call This Method */
   getApi() async {
     await homeProvider.setLoading(true);
+
     await _fetchDataCategory(0);
     await _fetchDataVideo("1", "0", 0);
     await homeProvider.setLoading(false);
@@ -177,6 +180,33 @@ class _HomeState extends State<Home> {
       appBar: const CustomAppBar(contentType: "1"),
       body: Column(
         children: [
+          GestureDetector(
+            onTap: () async {
+              var uploadYouth = false;
+              var package = await ApiService().package().then((value) {
+                for (var i = 0; i < value.result!.length; i++) {
+                  print(value.result![i].isBuy);
+                  if (value.result![i].isBuy == 1) {
+                    uploadYouth = true;
+                    break;
+                  }
+                }
+              });
+              if(uploadYouth){
+                _showSubscriptionDialog(context);
+
+              }
+              else{
+
+                _showSubscriptionDialog(context);
+              }
+              log(package.toString());
+            },
+            child: Icon(
+              Icons.circle,
+              color: Colors.white,
+            ),
+          ),
           buildCategory(),
           Expanded(
             child: SingleChildScrollView(
@@ -1543,4 +1573,38 @@ class _HomeState extends State<Home> {
       },
     );
   }
+  void _showSubscriptionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Subscription Required"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("You need to purchase a subscription first to upload videos to the Youth Channel."),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to subscription purchase page
+                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Setting()));
+                },
+                child: Text("Purchase Subscription"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

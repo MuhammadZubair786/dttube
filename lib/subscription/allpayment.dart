@@ -31,6 +31,7 @@ import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 import 'package:uuid/uuid.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final bool _kAutoConsume = Platform.isIOS || true;
 
@@ -228,40 +229,84 @@ void _showPaystackDetailsDialog(BuildContext context) {
     );
   }
 
-  void _processPaystackPayment(
-      BuildContext context, String email, String currency) {
+  Future<void> _processPaystackPayment(
+      BuildContext context, String email, String currency) async {
     if (email.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Email is required")));
       return;
     }
+     final String secretKey = "sk_test_e3f5183a6c6215a055f53ed9582e95c6c12751e2";
 
     var uuid = Uuid();
     final uniqueTransRef = uuid.v4();
 
-    PayWithPayStack().now(
-      context: context,
-      secretKey: "sk_test_e3f5183a6c6215a055f53ed9582e95c6c12751e2",
-      customerEmail: email,
-      reference: uniqueTransRef,
-      currency: currency,
+    // PayWithPayStack().now(
+    //   context: context,
+    //   secretKey: "sk_test_e3f5183a6c6215a055f53ed9582e95c6c12751e2",
+    //   customerEmail: email,
+    //   reference: uniqueTransRef,
+    //   currency: currency,
 
-      amount: "20000", // Amount in smallest unit (e.g., 20000 kobo = 200 GHS)
-      callbackUrl: "https://google.com",
-      transactionCompleted: () {
-        debugPrint("Transaction completed!");
+    //   amount: "20000", // Amount in smallest unit (e.g., 20000 kobo = 200 GHS)
+    //   callbackUrl: "https://google.com",
+    //   transactionCompleted: () {
+    //     debugPrint("Transaction completed!");
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Transaction completed successfully!")),
-        );
-      },
-      transactionNotCompleted: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Transaction was not completed.")),
-        );
-      },
-    );
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text("Transaction completed successfully!")),
+    //     );
+    //   },
+    //   transactionNotCompleted: () {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text("Transaction was not completed.")),
+    //     );
+    //   },
+    // );
+     final String callbackUrl = "https://charming-gelato-928f27.netlify.app?user_id=${Constant.userID}&package_id=${widget.itemId}";
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://api.paystack.co/transaction/initialize'),
+        headers: {
+          'Authorization': 'Bearer $secretKey',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'amount': widget.price, // Amount in kobo (e.g., 20000 kobo = 200 GHS
+          'callback_url': callbackUrl, // Dynamic callback URL
+        }),
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && responseData['status'] == true) {
+        String authorizationUrl = responseData['data']['authorization_url'];
+        debugPrint('Authorization URL: $authorizationUrl');
+
+        // Navigate to the authorization URL (web view or browser)
+        openPaymentPage(authorizationUrl);
+      } else {
+        throw Exception("Failed to initialize transaction: ${responseData['message']}");
+      }
+    } catch (error) {
+      debugPrint('Error initializing transaction: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to initialize transaction. Please try again.')),
+      );
+    }
   }
+
+   void openPaymentPage(String url)async {
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+    debugPrint('Opening Payment Page: $url');
+  }
+
 
 
   
