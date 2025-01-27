@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dttube/model/sectionlistmodel.dart';
 import 'package:dttube/pages/getmusicbycategory.dart';
 import 'package:dttube/pages/getmusicbylanguage.dart';
@@ -15,7 +14,7 @@ import 'package:dttube/utils/musicmanager.dart';
 import 'package:dttube/utils/utils.dart';
 import 'package:dttube/widget/customappbar.dart';
 import 'package:dttube/widget/nodata.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:dttube/provider/musicprovider.dart';
 import 'package:dttube/utils/color.dart';
 import 'package:dttube/utils/dimens.dart';
@@ -23,6 +22,7 @@ import 'package:dttube/widget/myimage.dart';
 import 'package:dttube/widget/mynetworkimg.dart';
 import 'package:dttube/widget/mytext.dart';
 import 'package:provider/provider.dart';
+import 'package:carousel_slider/carousel_slider.dart'  ;
 
 class Music extends StatefulWidget {
   const Music({super.key});
@@ -33,7 +33,7 @@ class Music extends StatefulWidget {
 
 class _MusicState extends State<Music> {
   final MusicManager musicManager = MusicManager();
-  CarouselController bannerController = CarouselController();
+  var bannerController = CarouselSliderController();
   late MusicProvider musicProvider;
   late MusicDetailProvider musicDetailProvider;
   late ScrollController _scrollController;
@@ -1472,7 +1472,7 @@ class _MusicState extends State<Music> {
       child: CarouselSlider.builder(
         itemCount: sectionList?[sectionindex].data?.length ?? 0,
         carouselController: bannerController,
-        options: CarouselOptions(
+        options:CarouselOptions(
           initialPage: 0,
           height: MediaQuery.of(context).size.height,
           enlargeCenterPage: true,

@@ -30,7 +30,7 @@ class PostVideoProvider extends ChangeNotifier {
     loading = true;
     uploading = true;
     setSendingComment(true);
-    successModel = await ApiService().uploadVideo(title, video, portraitImage);
+    successModel = await ApiService().uploadVideoChnnael(title, video, portraitImage);
     debugPrint("uploadNewVideo status :==> ${successModel.status}");
     debugPrint("uploadNewVideo message :==> ${successModel.message}");
     loading = false;

@@ -10,7 +10,6 @@ import 'package:dttube/utils/dimens.dart';
 import 'package:dttube/utils/sharedpre.dart';
 import 'package:dttube/utils/utils.dart';
 import 'package:dttube/widget/myimage.dart';
-import 'package:dttube/widget/mytext.dart';
 import 'package:dttube/widget/mytextnoshadow.dart';
 
 import 'package:dttube/widget/nodata.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import '../model/packagemodel.dart';
+
 
 class Subscription extends StatefulWidget {
   const Subscription({
@@ -32,7 +32,7 @@ class Subscription extends StatefulWidget {
 
 class SubscriptionState extends State<Subscription> {
   late SubscriptionProvider subscriptionProvider;
-  CarouselController pageController = CarouselController();
+  var pageController = CarouselSliderController();
   SharedPre sharedPre = SharedPre();
   String? userName, userEmail, userMobileNo;
 

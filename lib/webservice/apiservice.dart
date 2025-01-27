@@ -169,7 +169,8 @@ class ApiService {
           'user_id': Constant.userID == null ? "0" : (Constant.userID ?? ""),
           'page_no': pageNo,
         }));
-    shortModel = ShortModel.fromJson(response.data);
+     shortModel = ShortModel.fromJson(response.data);
+    shortModel.result?.shuffle();
     return shortModel;
   }
 
@@ -874,6 +875,37 @@ class ApiService {
     debugPrint("Image:=======> $portraitImage");
     SuccessModel successModel;
     String uploadVideo = "upload_reels";
+    Response response = await dio.post(
+      '$baseurl$uploadVideo',
+      data: FormData.fromMap({
+        'channel_id': Constant.channelID,
+        'title': title,
+        "video": (video?.path ?? "") != ""
+            ? (MultipartFile.fromFileSync(
+                video?.path ?? "",
+                filename: video?.path.split('/').last ?? "",
+              ))
+            : "",
+        "portrait_img": (portraitImage?.path ?? "") != ""
+            ? (MultipartFile.fromFileSync(
+                portraitImage?.path ?? "",
+                filename: portraitImage?.path.split('/').last ?? "",
+              ))
+            : "",
+      }),
+    );
+
+    successModel = SuccessModel.fromJson(response.data);
+    return successModel;
+  }
+
+
+   Future<SuccessModel> uploadVideoChnnael(title, video, portraitImage) async {
+    debugPrint("Title:=========> $title");
+    debugPrint("Video :===> $video");
+    debugPrint("Image:=======> $portraitImage");
+    SuccessModel successModel;
+    String uploadVideo = "video";
     Response response = await dio.post(
       '$baseurl$uploadVideo',
       data: FormData.fromMap({

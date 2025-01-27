@@ -251,7 +251,7 @@ class ShortState extends State<Short> {
                   const SizedBox(width: 15),
                   GestureDetector(
                     onTap: (){
-                     Navigator.pop(context);
+                    //  Navigator.pop(context);
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));                    },
                     child: Container(
                       width: 130,
