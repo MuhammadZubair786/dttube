@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dttube/pages/detail.dart';
 import 'package:dttube/pages/login.dart';
 import 'package:dttube/pages/setting.dart';
+import 'package:dttube/pages/videoRecordChannel/videorecord.dart';
 import 'package:dttube/provider/homeprovider.dart';
 import 'package:dttube/utils/constant.dart';
 import 'package:dttube/utils/customwidget.dart';
@@ -177,11 +178,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: colorPrimary,
-      appBar: const CustomAppBar(contentType: "1"),
-      body: Column(
-        children: [
-          GestureDetector(
-            onTap: () async {
+      appBar: AppBar(backgroundColor: colorPrimary, actions: [
+        GestureDetector(
+       
+             onTap: () async {
               var uploadYouth = false;
               var package = await ApiService().package().then((value) {
                 for (var i = 0; i < value.result!.length; i++) {
@@ -192,21 +192,67 @@ class _HomeState extends State<Home> {
                   }
                 }
               });
-              if(uploadYouth){
-                _showSubscriptionDialog(context);
-
-              }
-              else{
-
+              if (uploadYouth) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VideoRecordChannel(
+                              contestId: '',
+                              contestImg: '',
+                              hashtagId: '',
+                              hashtagName: '',
+                            )));
+              } else {
                 _showSubscriptionDialog(context);
               }
               log(package.toString());
-            },
-            child: Icon(
-              Icons.circle,
-              color: Colors.white,
-            ),
+            
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: CircleAvatar(
+                backgroundColor: Colors.pink,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                )),
           ),
+        ),
+      ]),
+      body: Column(
+        children: [
+          // GestureDetector(
+          //   onTap: () async {
+          //     var uploadYouth = false;
+          //     var package = await ApiService().package().then((value) {
+          //       for (var i = 0; i < value.result!.length; i++) {
+          //         print(value.result![i].isBuy);
+          //         if (value.result![i].isBuy == 1) {
+          //           uploadYouth = true;
+          //           break;
+          //         }
+          //       }
+          //     });
+          //     if (uploadYouth) {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => VideoRecordChannel(
+          //                     contestId: '',
+          //                     contestImg: '',
+          //                     hashtagId: '',
+          //                     hashtagName: '',
+          //                   )));
+          //     } else {
+          //       _showSubscriptionDialog(context);
+          //     }
+          //     log(package.toString());
+          //   },
+          //   child: Icon(
+          //     Icons.circle,
+          //     color: Colors.white,
+          //   ),
+          // ),
           buildCategory(),
           Expanded(
             child: SingleChildScrollView(
@@ -362,6 +408,7 @@ class _HomeState extends State<Home> {
       if ((homeProvider.videoList?.length ?? 0) > 0) {
         return ListView.builder(
           itemCount: homeProvider.videoList?.length ?? 0,
+          reverse: true,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           physics: const BouncingScrollPhysics(),
@@ -1573,6 +1620,7 @@ class _HomeState extends State<Home> {
       },
     );
   }
+
   void _showSubscriptionDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -1582,13 +1630,15 @@ class _HomeState extends State<Home> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("You need to purchase a subscription first to upload videos to the Youth Channel."),
+              Text(
+                  "You need to purchase a subscription first to upload videos to the Youth Channel."),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Navigate to subscription purchase page
                   Navigator.of(context).pop(); // Close the dialog
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Setting()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Setting()));
                 },
                 child: Text("Purchase Subscription"),
               ),
@@ -1606,5 +1656,4 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
 }

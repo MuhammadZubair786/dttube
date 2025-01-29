@@ -30,7 +30,7 @@ class PostVideoProvider extends ChangeNotifier {
     loading = true;
     uploading = true;
     setSendingComment(true);
-    successModel = await ApiService().uploadVideoChnnael(title, video, portraitImage);
+    successModel = await ApiService().uploadVideo(title, video, portraitImage);
     debugPrint("uploadNewVideo status :==> ${successModel.status}");
     debugPrint("uploadNewVideo message :==> ${successModel.message}");
     loading = false;
@@ -38,6 +38,40 @@ class PostVideoProvider extends ChangeNotifier {
     setSendingComment(false);
     notifyListeners();
   }
+
+  Future<void> uploadNewVideoChannel(title, video, portraitImage,category_id) async {
+    finalThumb = portraitImage?.path ?? "";
+    debugPrint("Title:=========> $title");
+    debugPrint("Video :===> $video");
+    debugPrint("Image:=======> $portraitImage");
+    loading = true;
+    uploading = true;
+    setSendingComment(true);
+    successModel = await ApiService().uploadVideoChannel(title, video, portraitImage,category_id);
+    debugPrint("uploadNewVideo status :==> ${successModel.status}");
+    debugPrint("uploadNewVideo message :==> ${successModel.message}");
+    loading = false;
+    uploading = false;
+    setSendingComment(false);
+    notifyListeners();
+  }
+
+  //  Future<void> uploadNewVideoChannel(title, video, portraitImage,category_id) async {
+  //   finalThumb = portraitImage?.path ?? "";
+  //   debugPrint("Title:=========> $title");
+  //   debugPrint("Video :===> $video");
+  //   debugPrint("Image:=======> $portraitImage");
+  //   loading = true;
+  //   uploading = true;
+  //   setSendingComment(true);
+  //   successModel = await ApiService().uploadVideoChannel(title, video, portraitImage,category_id);
+  //   debugPrint("uploadNewVideo status :==> ${successModel.status}");
+  //   debugPrint("uploadNewVideo message :==> ${successModel.message}");
+  //   loading = false;
+  //   uploading = false;
+  //   setSendingComment(false);
+  //   notifyListeners();
+  // }
 
   setSendingComment(isSending) {
     debugPrint("isSending ==> $isSending");

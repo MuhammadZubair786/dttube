@@ -99,13 +99,13 @@ dependencies:
   uuid: ^4.0.0
   payu_checkoutpro_flutter: ^1.0.4
   pay_with_paystack: ^1.0.6
-  flutter_share: ^2.0.0
+  flutter_share: 
   # Payment Gateways
   marquee: ^2.2.3
   # Upload Reels
   ffmpeg_kit_flutter_min: ^6.0.3
   video_thumbnail: ^0.5.3
-  gallery_saver: ^2.3.2
+  gallery_saver: 
   detectable_text_field: ^2.1.0
   audioplayers: ^5.2.1
   flutter_staggered_grid_view: ^0.7.0

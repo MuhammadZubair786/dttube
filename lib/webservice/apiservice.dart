@@ -900,17 +900,24 @@ class ApiService {
   }
 
 
-   Future<SuccessModel> uploadVideoChnnael(title, video, portraitImage) async {
+   Future<SuccessModel> uploadVideoChannel(title, video, portraitImage,category_id) async {
     debugPrint("Title:=========> $title");
     debugPrint("Video :===> $video");
     debugPrint("Image:=======> $portraitImage");
     SuccessModel successModel;
-    String uploadVideo = "video";
+    String uploadVideo = "upload_video";
     Response response = await dio.post(
       '$baseurl$uploadVideo',
       data: FormData.fromMap({
         'channel_id': Constant.channelID,
+        'description':" .. ",
+        "language_id":1,
+        "content_upload_type":"server_video",
+        "is_rent":0,
+        "is_comment":1,
+        "is_like":1,
         'title': title,
+        "category_id":category_id,
         "video": (video?.path ?? "") != ""
             ? (MultipartFile.fromFileSync(
                 video?.path ?? "",
@@ -923,6 +930,14 @@ class ApiService {
                 filename: portraitImage?.path.split('/').last ?? "",
               ))
             : "",
+          "landscape_img": (portraitImage?.path ?? "") != ""
+            ? (MultipartFile.fromFileSync(
+                portraitImage?.path ?? "",
+                filename: portraitImage?.path.split('/').last ?? "",
+              ))
+            : "",
+            "content_duration":"00:00:10",
+
       }),
     );
 
